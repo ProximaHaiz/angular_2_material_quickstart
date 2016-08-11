@@ -1,0 +1,44 @@
+
+<div class="content-page" *ngIf="content">
+    <div class="content-header-line">
+        <div class="has-error" *ngIf="errorMessage">{{errorMessage}}</div>
+        <div class="content-image col-sm-6">
+                
+                  <img id="topImage" src={{content.imageurl}} data-toggle="modal"
+                   data-target="#myModal" alt="Trolltunga, Norway" >
+
+                     <!-- The Modal -->
+                  <div id="myModal" class="modal">
+                      <span class="close" data-dismiss="modal" >&times;</span>
+
+                    <!-- Modal Content (The Image) -->
+                    <img class="modal-content" id="myImg" src={{content.imageurl}}/> 
+
+                    <!-- Modal Caption (Image Text) -->
+                    <div id="caption">
+                        <h3>{{content.title}}</h3>
+                    </div>
+                  </div>
+        </div>
+
+        <div class="content-header col-sm-5"> 
+            <div class="embed-responsive embed-responsive-16by9">
+                <h2>{{content.title}}</h2>
+                <h5>Категория:{{content.category}}</h5>
+            </div>
+
+        </div>
+
+    </div>
+
+        <div class="content-body"><h1>{{ content.name }}</h1>
+                <h3>{{content.description}}</h3>
+        </div>
+        
+        <div class="content-footer">
+             <a class="btn btn-default" (click)="onBack()" style="width:80px">
+            <i class="glyphicon glyphicon-chevron-left"></i> Back
+        </a>
+            
+        </div>
+</div>

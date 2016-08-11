@@ -1,0 +1,50 @@
+ <form class="form-signin col-md-3" 
+  (ngSubmit)="login()" [formGroup]="registerForm">
+            <h2 class="form-signin-heading">Please registrate</h2>
+       <div class="form-group " [ngClass]="{'has-error': formError.email}">
+           
+            <input class="form-control"
+                   type="text"
+                   id="username"
+                   placeholder="Email address"
+                   formControlName="email"
+                   autofocus="autofocus"/>
+             <span class="help-block" *ngIf="formError.email">
+                {{formError.email}}
+             </span>
+       </div>
+       
+       <div class="form-group" [ngClass]="{'has-error':formError.password}">
+            <input class="form-control"
+                   type="password"
+                   id="password"
+                   placeholder="Password"
+                   formControlName="password">
+            <span class="help-block" *ngIf="formError.password">
+                 {{formError.password}}
+            </span>
+        </div>
+        
+        <div class="form-group" [ngClass]="{'has-error':formError.repeat_password}">
+            <input class = "form-control"
+                   type = "password"
+                   id = "password"
+                   placeholder = "Reset password"
+                   formControlName = "repeat_password">
+            <span class = "help-block" *ngIf = "formError.repeat_password">
+                 {{formError.repeat_password}}
+            </span>
+        </div>
+
+
+            <div class="button-group">
+            <a class="btn btn-primary btn-md">Cancel</a>
+            <button type="submit"
+                     class="btn btn-primary btn-md"
+                     [disabled]='!registerForm.valid'>Sign up</button>
+            </div>
+        </form>
+        
+        <!--<h1>pageTitle:{{pass.value}}</h1>-->
+
+

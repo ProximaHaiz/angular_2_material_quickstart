@@ -1,0 +1,138 @@
+.content-page{
+    border: 1px solid grey;
+    height: auto;
+    border-radius: 10px;
+    margin-bottom: 100px;
+}
+
+.content-page .content-image{
+    border-radius: 10px;
+
+}
+
+#topImage{
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+    width: 80%;
+    height: 80%;
+  margin: 25px;
+}
+
+.content-page .content-header-line{
+        height: 350px;
+        margin-bottom: 40px; ; 
+}
+
+.content-page .content-header{
+    /*border: 1px solid green;*/
+
+     height: 300px;
+}
+
+.content-page .content-body{
+    border: 1 px solid blue;
+    /*background: blue;*/
+    height: auto;
+    margin: 15px;
+    padding: 15px;
+}
+
+
+.content-page .content-footer{
+    height: 50px;
+    padding: 10px;
+    background: #f5f5f5;
+    border-radius: 10px;
+}
+
+
+/*Modal Image:*/
+#myImg {
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+     
+}
+
+#myImg:hover {opacity: 0.7;}
+
+
+/* Modal Content (image) */
+.modal-content {
+    margin: auto;
+    display: block;
+    width: 80% ;
+    max-width: 700px ;
+   
+}
+
+/* Caption of Modal Image */
+#caption {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+    text-align: center;
+    color: #ccc;
+    padding: 10px 0;
+    height: 150px;
+}
+
+/* Add Animation */
+.modal-content, #caption {    
+    -webkit-animation-name: zoom;
+    -webkit-animation-duration: 0.6s;
+    animation-name: zoom;
+    animation-duration: 0.6s;
+}
+
+@-webkit-keyframes zoom {
+    from {-webkit-transform:scale(0)} 
+    to {-webkit-transform:scale(1)}
+}
+
+@keyframes zoom {
+    from {transform:scale(0)} 
+    to {transform:scale(1)}
+}
+
+/* The Close Button */
+.close {
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.close:hover,
+.close:focus {
+    color: #bbb;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* 100% Image Width on Smaller Screens */
+@media only screen and (max-width: 700px){
+    .modal-content {
+        width: 100%;
+    }
+}
+
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1041; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+}

@@ -1,0 +1,8 @@
+.fc-today{
+    background: yellowgreen
+}
+
+.fc-day :hover{
+    background: grey;
+    transition: 0.4s;
+}

@@ -2,8 +2,8 @@ var webpack = require("webpack");
 
 module.exports = {
   entry: {
-    "vendor": "./app/vendor",
-    "app": "./app/boot"
+    "vendor": "./app_ts/vendor",
+    "app": "./app_ts/boot"
   },
   output: {
     path: __dirname,

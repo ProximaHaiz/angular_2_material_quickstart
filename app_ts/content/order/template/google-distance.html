@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Simple Distance Counter</title>
+	<meta charset="UTF-8">
+	<style>
+		.blocked {
+			display: block;
+			margin: 5px;
+		}
+	</style>
+</head>
+<body>
+	<form id="distanceMatrix">
+		<input class="blocked" id="address1" type="text">
+		<input class="blocked" id="address2" type="text">
+		<input class="blocked" type="submit">
+	</form>
+
+	<span id="result"></span>
+
+	<script src="http://maps.google.com/maps/api/js?key=AIzaSyBYNPPPbAw191eOmEKKdr7EDA9eG3e-Nzc"></script>
+	<script>
+
+		var service = new google.maps.DistanceMatrixService();
+
+		var form = document.getElementById('distanceMatrix'),
+			address1 = document.getElementById('address1'),
+			address2 = document.getElementById('address2'),
+			result = document.getElementById('result');
+
+		form.onsubmit = function(e) {
+			e.preventDefault();
+
+			var value1 = address1.value,
+				value2 = address2.value;
+
+			if (value1 && value2) {
+				request([value1], [value2], function(response, status) {
+					var elem = response.rows[0].elements[0];
+					var time = elem.duration.text;
+					var distance = elem.distance.text;
+
+					console.log(time);
+
+					result.textContent = time + ' ' + distance;
+				});
+			}
+
+		};
+
+		/**
+			* Pass an origin point(s) and distination point(s) and invoke a cb funtion after the result is ready to process
+			*
+			*@param {array} origins
+			*@param {array} destinations
+			*@param {function} cb
+
+		*/
+
+		function googleMapRequest(origins, destinations, cb) {
+			service.getDistanceMatrix({
+			    origins: origins,
+			    destinations: destinations,
+			    travelMode: google.maps.TravelMode.DRIVING
+		  	}, cb);
+		}
+
+	</script>
+</body>
+</html>
