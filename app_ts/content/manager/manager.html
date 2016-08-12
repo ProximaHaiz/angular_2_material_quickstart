@@ -17,7 +17,7 @@
                             <th>Client info</th>
                             <th>Address</th>
                             <th>Value</th>
-                            <th>Asing</th>
+                            <th class="text-center">Asing</th>
                             <th>Manager info</th>
                             <th>Buttons</th>
                         </tr>
@@ -41,7 +41,7 @@
                             <td>
                                 From: {{item.loadingAddress[0].address}}<br>
                                 To: {{item.unloadingAddress[0].address}}<br>
-                                Distance: {{item.distance}}
+                                Distance: {{item.distance}} miles
                             </td>
 
                             <td>
@@ -54,7 +54,7 @@
                                       <div class="input-group">
                                         <span class="input-group-addon">Truck</span>
                                         <div class="dropdown">
-                                            <select style="width: 50%;" class="form-control">
+                                            <select style="width: 70%;" class="form-control">
                                                 <option *ngFor="let vehicle of item.vehicles">
                                                     {{vehicle.type+' '+vehicle.vehicleRegNumber}}
                                                 </option>
@@ -68,7 +68,7 @@
                                     <div class="input-group">
                                         <span class="input-group-addon">Forman</span>
                                         <div class="dropdown">
-                                            <select style="width: 50%;" class="form-control">
+                                            <select style="width: 70%;" class="form-control">
                                                 <option *ngFor="let forman of item.foremans">
                                                     {{forman.firstName+' '+forman.lastName}}
                                             </select>
@@ -79,11 +79,12 @@
                                     <div class="input-group">
                                         <span class="input-group-addon">Driver</span>
                                         <div class="dropdown">
-                                            <select style="width: 50%;" class="form-control">
+                                            <select style="width: 70%;" class="form-control">
                                                 <option *ngFor="let driver of item.drivers">
                                                     {{driver.firstName+' '+driver.lastName}}
                                                 </option>
                                             </select>
+                                             <button type="button" class="btn btn-sm btn-pill btn-primary">sms</button>
                                         </div>
                                     </div>
 
@@ -91,7 +92,7 @@
                                     <div class="input-group">
                                         <span class="input-group-addon">Mover</span>
                                         <div class="dropdown">
-                                            <select style="width: 50%;" class="form-control" id="movers">
+                                            <select style="width: 70%;" class="form-control" id="movers">
                                                 <option *ngFor="let mover of item.moverss">
                                                         {{mover.firstName+' '+ mover.lastName}}
                                                 </option>
@@ -105,12 +106,11 @@
                                     <div class="input-group">
                                         <span class="input-group-addon">Helper</span>
                                         <div class="dropdown">
-                                            <select style="width: 50%;" class="form-control">
+                                            <select style="width: 70%;" class="form-control">
                                                 <option *ngFor="let helper of item.helpers">
                                                     {{helper.firstName+' '+helper.lastName}}
                                                 </option>
                                             </select>
-                                            <button type="button" class="btn btn-sm btn-pill btn-primary">sms</button>
                                         </div>
                                     </div>
                                 </div>

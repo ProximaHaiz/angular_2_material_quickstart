@@ -28,7 +28,7 @@ export class OrderForm{
     zipTo:number;
     unloadingAddress:Address [];
     loadingAddress: Address [];
-    distance: number;
+    distance: string;
     // loadingAddress:string;
     // unLoadingAddress:string;
     tariff:string;

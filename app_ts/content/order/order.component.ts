@@ -329,7 +329,7 @@ export class OrderComponent implements OnInit {
              this.timeModel.orderForm.storageDate='2016-08-08'
              this.timeModel.orderForm.storageSize='storageSizeTest';
              this.timeModel.orderForm.tariff='testTariff';
-             this.timeModel.orderForm.distance = 101;
+             this.timeModel.orderForm.distance = '101';
 
             //PaimtenDeatilsForm
              this.timeModel.paymentDetailsForm.company='testCompany';
@@ -638,7 +638,7 @@ private changeCategoryPrice(){
 }
 
 /**
- * get Distance between AddressesFrom and addressesTo and how the results on tip messages
+ * get Distance between AddressesFrom and addressesTo and show the results on tip messages
  */
 getDistance(){
     let searchDistance = new SearchDistance();
@@ -652,8 +652,13 @@ getDistance(){
            let array:any[]=[];
            array = data;
            let counter:number=0;
+           this.timeModel.orderForm.distance='';
+           let dist:number=0;
            array.forEach(element => {
-             this.timeModel.orderForm.distance +=element.distance;
+             console.log('Element.distance: '+element.distance);
+             dist = element.distance;
+             this.timeModel.orderForm.distance += dist;
+             console.log('Distance: '+this.timeModel.orderForm.distance);
               this.msgs.push({severity: 'info', summary: element.from+' => '
               +element.to, detail:'distance:'+ element.distance+', duration:'+element.duration});
            });
