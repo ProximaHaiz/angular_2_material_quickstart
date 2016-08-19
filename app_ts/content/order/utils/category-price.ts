@@ -78,7 +78,7 @@ export class PriceCategory {
             two: 85,three: 115,four: 145,five: 165,six: 0,seven: 0,eight: 0,nine: 0,ten: 0
         },
          'Lions':{
-            two: 100,three: 135,four: 145,five: 165,six: 0,seven: 0,eight: 0,nine: 0,ten: 0
+            two: 100,three: 135,four: 165,five: 165,six: 0,seven: 0,eight: 0,nine: 0,ten: 0
         },
         'Apple':{
             two: 85,three: 115,four: 145,five: 165,six: 0,seven: 0,eight: 0,nine: 0,ten: 0      

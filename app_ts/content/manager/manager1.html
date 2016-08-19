@@ -7,145 +7,106 @@
                 <div class="panel panel-default">
                     <!-- Default panel contents -->
                     <div class="panel-heading">Manager board</div>
-
+                    
                     <!-- Table -->
                     <table class="table">
                         <thead>
                         <tr>
                             <th>Order</th>
-                            <th>Time/Client info</th>
-                            <!--<th>Client info</th>-->
-                            <th>Address/Value</th>
-                            <!--<th>Value</th>-->
+                            <th>Time</th>
+                            <th>Client info</th>
+                            <th>Address</th>
+                            <th>Value</th>
                             <th class="text-center">Asing</th>
-                            <th>Comment for manager</th>
+                            <th>Manager info</th>
+                            <th>Buttons</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr *ngFor="let item of orders">
-                            <td style="width: 1%;">
-                                <!--id:{{item.orderNumber}}-->
-                               <span>
-                                 <span class="glyphicon glyphicon-list-alt"></span>  {{item.orderNumber}}
-                               </span>
+                            <td>
+                                id:{{item.orderNumber}}  
+                            </td>  
+
+                            <td>
+                               time:{{item.date}}
                             </td>
 
                             <td>
-                               <span class="glyphicon glyphicon-time"></span> {{item.orderDay}}
-                               <hr style="margin-top: 64.5px;">
-                               <span class="glyphicon glyphicon-user"></span> {{item.fullName}}<br>
-                               <span class="glyphicon glyphicon-earphone"></span> {{item.phoneNumber}}<br>
-                               <span class="glyphicon glyphicon-envelope"></span> {{item.mail}}
+                                Name:{{item.fullName}}<br>
+                                Phone:{{item.phoneNumber}}<br>
+                                Email:{{item.mail}}
                             </td>
-
-                            <!--<td>
-                                <span class="glyphicon glyphicon-user"></span> {{item.fullName}}<br>
-                                <span class="glyphicon glyphicon-earphone"></span> {{item.phoneNumber}}<br>
-                                <span class="glyphicon glyphicon-envelope"></span> {{item.mail}}
-                            </td>-->
 
                             <td>
-                                <spa style="cursor: pointer;font-weight: bold;" (click)="addressFrom('adsadasd', item.loadingAddress[0].address)">
-                                  <span class="glyphicon glyphicon-export"></span> {{item.loadingAddress[0].address}}
-                                </spa><br>
-
-                                <span class="glyphicon glyphicon-import"></span> {{item.unloadingAddress[0].address}}<br>
-                                <span class="glyphicon glyphicon-road"></span> {{item.distance}} miles
-
-                                <hr>
-
-                                <span>
-                                  <span class="glyphicon glyphicon-inbox"></span> truck/van:
-                                  <span style="font-weight: bold;font-size: 1.1em;">{{item.truck}}</span><br>
-                                </span>
-                                <span>
-                                  <span class="glyphicon glyphicon-user"></span> movers:
-                                  <span style="font-weight: bold;font-size: 1.1em;">{{item.movers}}</span><br>
-                                </span>
-                              <!--movers:{{item.movers}}<br>-->
-                                <span>
-                                  <span class="glyphicon glyphicon-credit-card"></span>
-                                  <span style="font-weight: bold;font-size: 1.1em;">{{item.totalPrice|currency:'USD':true:'1.2-2'}}</span>
-                                </span><br>
+                                From: {{item.loadingAddress[0].address}}<br>
+                                To: {{item.unloadingAddress[0].address}}<br>
+                                Distance: {{item.distance}} miles
                             </td>
 
-                            <!--<td>
-
-                                <span>
-                                  <span class="glyphicon glyphicon-inbox"></span> {{item.truck}}<br>
-                                </span>
-                                <span>
-                                  <span class="glyphicon glyphicon-shopping-cart"></span> {{item.movers}}<br>
-                                </span>
-
-                                <span (click)="addressFrom('Rate per 1 hour: ', item.totalPriceForFirstHour)">
-                                  <span class="glyphicon glyphicon-credit-card"></span> {{item.totalPriceForFirstHour|currency:'USD':true:'1.2-2'}}
-                                </span><br>
+                            <td>
+                                truck:{{item.truck}}<br>
+                                movers:{{item.movers}}<br>
+                                rate per 1 hour: {{item.totalPriceForFirstHour|currency:'USD':true:'1.2-2'}}<br>
                             </td>
-                            -->
-                            <td style="width: 36%">
+                            <td style="width: 25%">
                                 <div>
-
                                       <div class="input-group">
-                                        <span class="input-group-addon" style="width: 28.5%;">Truck</span>
-                                        <div class="dropdown"style="width: 100%;">
-                                            <select class="form-control">
+                                        <span class="input-group-addon">Truck</span>
+                                        <div class="dropdown">
+                                            <select style="width: 70%;" class="form-control">
                                                 <option *ngFor="let vehicle of item.vehicles">
                                                     {{vehicle.type+' '+vehicle.vehicleRegNumber}}
                                                 </option>
                                             </select>
+                                            <button type="button" class="btn btn-sm btn-pill btn-primary">sms</button>
                                         </div>
-                                        <span class="input-group-addon sms-btn"><span class="glyphicon glyphicon-envelope"></span></span>
-                                      </div>
-                                     <!--<button style="position: absolute;margin-left: 17.5%;margin-top: -2.2%;" type="button" class="btn btn-sm btn-pill btn-primary">sms</button>-->
+                                    </div>
 
-
+                                    
                                     <!--<p-->
-                                    <div class="input-group" style="margin-top: 2%;">
-                                        <span class="input-group-addon" style="width: 28.5%;">Forman</span>
-                                        <div class="dropdown" style="width: 100%;">
-                                            <select  class="form-control">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">Forman</span>
+                                        <div class="dropdown">
+                                            <select style="width: 70%;" class="form-control">
                                                 <option *ngFor="let forman of item.foremans">
                                                     {{forman.firstName+' '+forman.lastName}}
                                             </select>
+                                            <button type="button" class="btn btn-sm btn-pill btn-primary">sms</button>
                                         </div>
-                                      <span class="input-group-addon sms-btn"><span class="glyphicon glyphicon-envelope"></span></span>
                                     </div>
-                                   <!--<button style="position: absolute;margin-left: 17.5%;margin-top: -2.1%;" type="button" class="btn btn-sm btn-pill btn-primary">sms</button>-->
                                     <!--/>-->
-                                    <div class="input-group" style="margin-top: 2%;">
-                                        <span class="input-group-addon" style="width: 28.5%;">Driver</span>
-                                        <div class="dropdown" style="width: 100%;">
-                                            <select class="form-control">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">Driver</span>
+                                        <div class="dropdown">
+                                            <select style="width: 70%;" class="form-control">
                                                 <option *ngFor="let driver of item.drivers">
                                                     {{driver.firstName+' '+driver.lastName}}
                                                 </option>
                                             </select>
+                                             <button type="button" class="btn btn-sm btn-pill btn-primary">sms</button>
                                         </div>
-                                      <span class="input-group-addon sms-btn"><span class="glyphicon glyphicon-envelope"></span></span>
                                     </div>
-                                  <!--<button style="position: absolute;margin-left: 17.5%;margin-top: -2.1%;" type="button" class="btn btn-sm btn-pill btn-primary">sms</button>-->
 
                                     <!--<p-->
-                                    <div class="input-group" style="margin-top: 2%;">
-                                        <span class="input-group-addon" style="width: 28.5%;">Mover</span>
-                                        <div class="dropdown" style="width: 100%;" >
-                                            <select class="form-control" id="movers">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">Mover</span>
+                                        <div class="dropdown">
+                                            <select style="width: 70%;" class="form-control" id="movers">
                                                 <option *ngFor="let mover of item.moverss">
                                                         {{mover.firstName+' '+ mover.lastName}}
                                                 </option>
                                             </select>
+                                            <button type="button" class="btn btn-sm btn-pill btn-primary">sms</button>
                                         </div>
-                                      <span class="input-group-addon sms-btn"><span class="glyphicon glyphicon-envelope"></span></span>
                                     </div>
-                                  <!--<button style="position: absolute;margin-left: 17.5%;margin-top: -2.1%;" type="button" class="btn btn-sm btn-pill btn-primary">sms</button>-->
                                     <!--/>-->
 
 
-                                    <div class="input-group" style="margin-top: 2%;">
-                                        <span class="input-group-addon" style="width: 62%;">Helper</span>
-                                        <div class="dropdown" style="width: 70%;">
-                                            <select class="form-control">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">Helper</span>
+                                        <div class="dropdown">
+                                            <select style="width: 70%;" class="form-control">
                                                 <option *ngFor="let helper of item.helpers">
                                                     {{helper.firstName+' '+helper.lastName}}
                                                 </option>
@@ -156,23 +117,18 @@
                             </td>
                             <td>
                                 <div class="form-group">
-                                    <textarea class="form-control"
-                                              rows="7"
-                                              cols="1"
+                                    <label for="comment">Comment for manager:</label>
+                                    <textarea class="form-control" 
+                                              rows="5" 
                                               id="comment"
                                               [value]="item.fieldForManagerComments">
                                     </textarea>
-
-                                  <button style="margin-top: 2%;" type="button" class="btn  btn-pill btn-primary"><span class="glyphicon glyphicon-print"></span> Print</button>
-                                  <button style="margin-top: 2%;" type="button" class="btn  btn-pill btn-primary"><span class="glyphicon glyphicon-open"></span> Submit</button>
                                 </div>
                             </td>
-
-                            <!--<td>
+                            <td>
                                 <button type="button" class="btn btn-sm btn-pill btn-primary">Print</button>
                                 <button type="button" class="btn btn-sm btn-pill btn-primary">Submit</button>
                             </td>
-                            -->
 
                         </tr>
                         <!--<tr>
@@ -211,7 +167,7 @@
                                             </select>
                                         </div>
                                     </div>
-
+                                  
                                     <div class="input-group">
                                         <span class="input-group-addon" id="basic-addon15994223">Forman</span>
                                         <div class="dropdown">
@@ -226,9 +182,9 @@
                                         </div>
                                     </div>
 
+                                  
 
-
-
+                                   
                                     <div class="input-group">
                                         <span class="input-group-addon" id="basic-addon15994223">Driver</span>
                                         <div class="dropdown">
@@ -242,9 +198,9 @@
                                             <button type="button" class="btn btn-sm btn-pill btn-primary">sms</button>
                                         </div>
                                     </div>
+                                    
 
-
-
+                             
                                     <div class="input-group">
                                         <span class="input-group-addon" id="basic-addon15994223">Mover</span>
                                         <div class="dropdown">
@@ -285,37 +241,3 @@
 
             </div>
         </form>
-
-
- <!-- Modal -->
- <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-   <div class="modal-dialog">
-     <div class="modal-content">
-       <div class="modal-header">
-         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-         <h4 class="modal-title" id="myModalLabel">{{modalInfo.title}}</h4>
-       </div>
-       <div class="modal-body">
-        {{modalInfo.data}}
-       </div>
-       <div class="modal-footer">
-         <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
-         <button type="button" class="btn btn-primary">Сохранить изменения</button>
-       </div>
-     </div>
-   </div>
- </div>
-
- <style>
-   .sms-btn{
-     opacity: 0.8;
-     cursor: pointer;
-   }
-   .sms-btn:active{
-     margin-top: -5px;
-     box-shadow: 5px 5px 5px rgba(0,0,0,0.03);
-   }
-   .sms-btn:hover{
-     opacity: 1;
-   }
- </style>

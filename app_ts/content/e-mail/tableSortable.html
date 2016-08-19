@@ -1,0 +1,73 @@
+<div class="panel panel-default" style="margin-top: 5%;box-shadow: 15px 15px 35px rgba(0,0,0,0.1) , -15px 15px 35px rgba(0,0,0,0.1)">
+  <!-- Default panel contents -->
+  <div class="panel-heading">
+    <h3>
+      <span class="glyphicon glyphicon-envelope"></span> E-Mails
+    </h3>
+
+  </div>
+<table class="table table-hover table-striped table-sortable">
+  <thead>
+  <tr>
+   <th *ngFor="let column of columns" [class]="selectedClass(column.variable)" (click)="changeSorting(column.variable)">
+      <span [class]="column.iconClass"></span> {{column.display}}
+    </th>
+
+    <!--<th [class]="selectedClass(id)" (click)="changeSorting(id)">
+      <span class="glyphicon glyphicon-list-alt"></span> ID
+    </th>
+    -->
+
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let object of data | orderBy : convertSorting()">
+    <td *ngFor="let column of columns">
+      {{object[column.variable] | format : column.filter}}
+    </td>
+  </tr>
+  </tbody>
+</table>
+</div>
+
+<style>
+  .table-sortable > thead > tr > th {
+    cursor: pointer;
+    position: relative;
+    background-image: none;
+  }
+
+  .table-sortable > thead > tr > th:after,
+  .table-sortable > thead > tr > th.sort-false:after,
+  .table-sortable > thead > tr > th.sort-true:after {
+    font-family: FontAwesome;
+    padding-left: 5px;
+  }
+
+  .table-sortable > thead > tr > th:after {
+    content: "\f0dc";
+    color: #ddd;
+  }
+  .table-sortable > thead > tr > th.sort-false:after {
+    content: "\f0de";
+    color: #767676;
+  }
+  .table-sortable > thead > tr > th.sort-true:after {
+    content: "\f0dd";
+    color: #767676;
+  }
+  th:hover{
+    cursor: pointer;
+    background-color: #fafafa;
+    box-shadow: 4px 4px 8px rgba(0,0,0,.1), -4px 4px 8px rgba(0,0,0,.1);
+  }
+  th{
+    text-align: center;
+  }
+  td{
+    text-align: center;
+  }
+  tr{
+    cursor: pointer;
+  }
+</style>

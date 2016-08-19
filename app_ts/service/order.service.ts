@@ -47,5 +47,11 @@ export class OrderService extends AbstractService{
         return this._http.get(API_URL+'order/categoryPrice',{search: params})
         .map(res =><Vehicle>res.json())
         .catch(this._handleError)
-}
+   }
+   getOrderCountStatuses(){
+             return this._http.get(API_URL+'orderCount')
+        .map(res =>res.json())
+        .catch(this._handleError)
+   }
+
 }

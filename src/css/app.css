@@ -91,8 +91,9 @@ height: 200px;
     z-index: 0 !important ;
 }
 
-.ui-inputtext-text{
-    width: 200px;
+.ui-inputtext{
+    width: 100%;
+    /*text-align: right;*/
 }
 .hasDatepicker{
 width: 120px;
@@ -133,8 +134,10 @@ width: 120px;
 }
 
 .ui-multiselect .ui-multiselect-trigger{
-    width:26px !important ;
+    width: 26px !important;
 }
+
+
 
 
 

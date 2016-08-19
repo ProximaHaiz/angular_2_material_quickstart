@@ -3,7 +3,7 @@ import {HTTP_PROVIDERS}    from '@angular/http';
 import {ROUTER_DIRECTIVES} from '@angular/router';
 import {
   Schedule, Button, InputText, Calendar, Dialog, Checkbox, TabPanel, TabView,
-  CodeHighlighter, Dropdown, SplitButton, SplitButtonItem, MultiSelect, InputSwitch, Growl, InputMask, SelectItem,
+  CodeHighlighter, Dropdown, SplitButton, SplitButtonItem, MultiSelect, InputSwitch, Growl, InputMask, SelectItem,Accordion,AccordionTab
 } from "primeng/primeng";
 import {
   FormBuilder,
@@ -36,6 +36,7 @@ import {Tape} from './interfaces/tape';
 import {Tariffs} from './interfaces/tariffs';
 import {TotalHour} from './interfaces/total-hour';
 import {Vehicle} from './interfaces/vehicle';
+import { OrderCountStatus } from './interfaces/order-count-status';
 import {Trucks,Shrink} from './interfaces/truck';
 import {PriceCategory} from './utils/category-price';
 import { SearchDistance } from './utils/search-distance';
@@ -56,23 +57,24 @@ SizeOfMoveType, TruckType, PriceCategoryType} from './enums/all-enums';
     Dialog, Checkbox, TabPanel, TabView,
     Button, CodeHighlighter, SplitButton,InputMask,
     SplitButtonItem, MultiSelect, InputSwitch, Growl,
-    ROUTER_DIRECTIVES,
-    REACTIVE_FORM_DIRECTIVES],
+    Accordion,AccordionTab,
+    ROUTER_DIRECTIVES,REACTIVE_FORM_DIRECTIVES],
   providers: [HTTP_PROVIDERS, OrderService, SelectorsService, GoogleApiService],
 })
 
 export class OrderComponent implements OnInit {
   private selectedCompany:string;
   private orderForm:FormGroup;
-  private timeModel:OrderModel;
+  private timeModel:OrderModel;//entity with orderForm and PaymentDetails
   private paymentPrice:PaymentPrice;
   private companyPrice:{[id:string]:CompanyPrice};
   private val2:number;
   private categoryType:PriceCategoryType;
-
-
   private moverType:MoversType;//текущее количество выбранных movers
-
+  private orderCountStatus:OrderCountStatus;
+  public btnAddAddressFromMargin: string = '60%';
+  public btnAddAddressToMargin:   string = '60%';
+  public howDidYouKnowMargin:     string = '36.5%';
 
   // Arrays for selectors...
   private time:string [];
@@ -87,7 +89,6 @@ export class OrderComponent implements OnInit {
   private packageMaterials:PackingMaterial[];
   private shrinks:Shrink[];
   private tapes:Tape[];
-  // private heavyItems:HeavyItem[];
   private storageSizes:StorageSize[];
   private totalHours:TotalHour[];
   private display:boolean = false;
@@ -96,11 +97,13 @@ export class OrderComponent implements OnInit {
   private date:Date = new Date();
   private vehicle:Vehicle;
   private moveDate:string;
+
+  private title:string;
   
 
-  heavyItems: SelectItem[];
+  private heavyItems: SelectItem[];
 
-    selectedheavyItems: string[] = [];
+  private selectedheavyItems: string[] = [];
 
   private priceCategory:PriceCategory;
 
@@ -242,38 +245,57 @@ export class OrderComponent implements OnInit {
     control.push(this.initAddressFrom());
     console.log('selectedCompany:' + this.selectedCompany);
     console.log('formValue:' + JSON.stringify(this.orderForm.value));
+
+    let length1 = this.btnAddAddressToMargin.length;
+    let length2 = this.howDidYouKnowMargin.length;
+
+    this.btnAddAddressToMargin = Number(this.btnAddAddressToMargin.substr(0,length1-1 )) + 52.5 + '%';
+    this.howDidYouKnowMargin = Number(this.howDidYouKnowMargin.substr(0,length2-1 )) + 14.5+'%';
   }
 
   addAddressTo() {
     const control = <FormArray>this.orderForm.controls['unLoadingAddress'];
     control.push(this.initAddressTo());
     console.log('formValue:' + JSON.stringify(this.orderForm.value));
+
+    let length2 = this.howDidYouKnowMargin.length;
+    this.howDidYouKnowMargin = Number(this.howDidYouKnowMargin.substr(0,length2-1 )) + 14.5+'%';
   }
 
 /**
  * Удаляет выбранное поле адресса и зипа
  */
-  removeAddressFrom(i:number) {
+   removeAddressFrom(i:number) {
     const control = <FormArray>this.orderForm.controls['loadingAddress'];
     control.removeAt(i);
+    let length = this.btnAddAddressToMargin.length;
+    this.btnAddAddressToMargin = Number(this.btnAddAddressToMargin.substr(0,length-1 )) - 52.5 + '%';
+
+    let length2 = this.howDidYouKnowMargin.length;
+    this.howDidYouKnowMargin = Number(this.howDidYouKnowMargin.substr(0,length2-1 )) - 14.5+'%';
   }
 
   removeAddressTo(i:number) {
     const control = <FormArray>this.orderForm.controls['unLoadingAddress'];
     control.removeAt(i);
+
+    let length2 = this.howDidYouKnowMargin.length;
+    this.howDidYouKnowMargin = Number(this.howDidYouKnowMargin.substr(0,length2-1 )) - 14.5+'%';
   }
 
 /*
   Метод, присваивающий значения с формы в поля бизнесс сущности
 **/
   private createPaymentDetailsFormEntity() {
+        this.changeTotalPrice();
+    console.log('totalPrice'+this.timeModel.paymentDetailsForm.totalPrice);
+    console.log('discount'+this.timeModel.paymentDetailsForm.discount);
   
     //Prices
      this.timeModel.paymentDetailsForm.ratePerHour = this.paymentPrice.ratePerHourPrice;
      this.timeModel.paymentDetailsForm.ddt = this.paymentPrice.ddtPrice;
      this.timeModel.paymentDetailsForm.tapeValue = this.paymentPrice.tapesPrice;
      this.timeModel.paymentDetailsForm.shrinkValue = this.paymentPrice.shrinkPrice;
-     this.timeModel.paymentDetailsForm.discount = this.paymentPrice.discount;
      this.timeModel.paymentDetailsForm.packingMaterialsValue = this.paymentPrice.packingMaterialPrice;
 
      //comments
@@ -283,6 +305,7 @@ export class OrderComponent implements OnInit {
   }
 
   private createOrderFormEntity(){
+
     this.timeModel.orderForm.fullName = this.orderForm.controls['fullName'].value;
     this.timeModel.orderForm.mail = this.orderForm.controls['mail'].value;
     this.timeModel.orderForm.phoneNumber = this.orderForm.controls['phoneNumber'].value;
@@ -319,7 +342,7 @@ export class OrderComponent implements OnInit {
           this.timeModel.orderForm.unloadingAddress=[
             {address:'testAddressTo1',zip:1111,floor:1},
             {address:'testAddressTo2',zip:2222,floor:2}]
-          this.timeModel.orderForm.mail='test@gmail.com';
+          this.timeModel.orderForm.mail='textmesweet@gmail.com';
           this.timeModel.orderForm.moveDate='2016-08-08';
           this.timeModel.orderForm.moveDateTime='03:00-04:00 a.m.';
               this.timeModel.orderForm.packingDate='2016-08-08';
@@ -329,33 +352,36 @@ export class OrderComponent implements OnInit {
              this.timeModel.orderForm.storageDate='2016-08-08'
              this.timeModel.orderForm.storageSize='storageSizeTest';
              this.timeModel.orderForm.tariff='testTariff';
-             this.timeModel.orderForm.distance = '101';
+             this.timeModel.orderForm.distance = '54';
 
             //PaimtenDeatilsForm
              this.timeModel.paymentDetailsForm.company='testCompany';
              this.timeModel.paymentDetailsForm.ddt=111;
-             this.timeModel.paymentDetailsForm.discount=2222;
+             this.timeModel.paymentDetailsForm.discount=22;
              this.timeModel.paymentDetailsForm.heavyItem='heavyItem';
              this.timeModel.paymentDetailsForm.moveDate='2016-08-08';
-             this.timeModel.paymentDetailsForm.movers=2;
+             this.timeModel.paymentDetailsForm.movers=3;
              this.timeModel.paymentDetailsForm.packingDate='2016-08-08';
              this.timeModel.paymentDetailsForm.packingMaterial='packMaterialTest';
              this.timeModel.paymentDetailsForm.packingMaterialsValue=333;
              this.timeModel.paymentDetailsForm.paymentMethod='perHour';
-             this.timeModel.paymentDetailsForm.ratePerHour=444;
              this.timeModel.paymentDetailsForm.rateType='perHour';
-             this.timeModel.paymentDetailsForm.serviceCharge='serviceChargeTest';
-             this.timeModel.paymentDetailsForm.shrink=555;
-             this.timeModel.paymentDetailsForm.shrinkValue=666;
+             this.timeModel.paymentDetailsForm.serviceCharge=30;
+             this.timeModel.paymentDetailsForm.shrink=2;
+             this.timeModel.paymentDetailsForm.shrinkValue=20;
              this.timeModel.paymentDetailsForm.sizeOfMove='sizeOfMoveTest';
-             this.timeModel.paymentDetailsForm.status='status';
+             this.timeModel.paymentDetailsForm.status='Booked';
              this.timeModel.paymentDetailsForm.storageDate='2016-08-08';
              this.timeModel.paymentDetailsForm.storageSize='storageSize';
              this.timeModel.paymentDetailsForm.tape=5;
              this.timeModel.paymentDetailsForm.tapeValue=55;
              this.timeModel.paymentDetailsForm.tariff='2222';
-             this.timeModel.paymentDetailsForm.totalForFirstHours=1100;
-             this.timeModel.paymentDetailsForm.truck=5;
+             this.timeModel.paymentDetailsForm.ratePerHour=115;
+             this.timeModel.paymentDetailsForm.truck=1;
+             this.timeModel.paymentDetailsForm.totalHour = 3;
+             this.timeModel.paymentDetailsForm.totalPrice = this.timeModel.paymentDetailsForm.ratePerHour*
+             this.timeModel.paymentDetailsForm.totalHour;
+             this.timeModel.paymentDetailsForm.numberOfHours = 3;
              this.timeModel.paymentDetailsForm.fieldForManagerComments='Test! Hi manager!'
              this.timeModel.paymentDetailsForm.fieldForSalesmanComments='Test! hi saleman!';
   }
@@ -472,12 +498,11 @@ private changeCategoryPrice(){
     Метод, подсчитывающий общую стоимость
   **/
   changeTotalPrice() {
-    let discount = this.paymentPrice.discount === 0 ? 1 : this.paymentPrice.discount;
-    let perHour = this.timeModel.paymentDetailsForm.totalForFirstHours == undefined ? 1 :
-                  this.timeModel.paymentDetailsForm.totalForFirstHours;
+    let perHour = this.timeModel.paymentDetailsForm.totalHour == undefined ? 1 :
+                  this.timeModel.paymentDetailsForm.totalHour;
 
-    this.paymentPrice.totalHourPrice =
-     this.timeModel.paymentDetailsForm.heavyItemPrice + 
+    // this.paymentPrice.totalHourPrice =
+    let totalPrice =  this.timeModel.paymentDetailsForm.heavyItemPrice + 
      (
       this.paymentPrice.ddtPrice +
       this.paymentPrice.heavyItemPrice +
@@ -487,7 +512,17 @@ private changeCategoryPrice(){
       this.paymentPrice.shrinkPrice +
       this.paymentPrice.sizeOfStorageSizePrice +
       this.paymentPrice.tapesPrice) * perHour;
+      
+      if(this.discountValue === '10.00%'){
+          this.timeModel.paymentDetailsForm.discount = totalPrice*0.1;
+          this.paymentPrice.totalHourPrice = totalPrice - this.timeModel.paymentDetailsForm.discount;
+          this.timeModel.paymentDetailsForm.totalPrice = this.paymentPrice.totalHourPrice;
+      }else{
+          this.paymentPrice.totalHourPrice = totalPrice;
+          this.timeModel.paymentDetailsForm.totalPrice = this.paymentPrice.totalHourPrice;
+      }
 
+      console.log('TotalPrice from changeTotalPrice')
   }
 
   selectedVehiclePm(item:any){
@@ -526,7 +561,7 @@ private changeCategoryPrice(){
 
   selectTotalForFirst(item:any) {
     console.log('TotalForFirst:' + item.name);
-    this.timeModel.paymentDetailsForm.totalForFirstHours = item.name;
+    this.timeModel.paymentDetailsForm.totalHour = item.name;
     this.changeTotalPrice();
   }
 
@@ -573,6 +608,21 @@ private changeCategoryPrice(){
       "01:00-02:00 p.m.", "01:30-02:30 p.m.", "02:00-03:00 p.m.", "02:30-03:30 p.m.", "03:00-04:00 p.m.", "03:30-04:30 p.m.",
       "04:00-05:00 p.m.", "04:30-05:30 p.m.", "05:00-06:00 p.m.", "05:30-06:30 p.m.", "06:00-07:00 p.m.",]
   }
+
+  public discountValue: string;
+
+  public toggleDiscount(){
+    if(this.discountValue == undefined) {
+      this.discountValue = '10.00%';
+      this.changeTotalPrice();
+    }else {
+      this.discountValue = null;
+      this.timeModel.paymentDetailsForm.discount = 0;
+      this.changeTotalPrice();
+   
+    }
+
+  };
 
   openTemp1() {
     console.log('openTemp1');
@@ -622,6 +672,7 @@ private changeCategoryPrice(){
      this._orderService.saveOrder(this.timeModel)
       .subscribe(
         data => {
+          this.getOrderCountStatus();
         },
         error => {
           console.log('Error:sentTest ' + error)
@@ -719,6 +770,9 @@ getDistance(){
 
 
   ngOnInit() {
+    this.title = '<h2>title</h2>';
+    this.orderCountStatus= new OrderCountStatus();
+    this.getOrderCountStatus();
     this.timeModel.paymentDetailsForm.heavyItemPrice=0;
      this.vehicle={
            avaliableTruckAm:0,
@@ -729,7 +783,7 @@ getDistance(){
          };
     this.categoryType = PriceCategoryType.MONDAY_THUESDAY;
     this.timeModel.orderForm.company = 'Royal';
-    this.timeModel.paymentDetailsForm.totalForFirstHours = 3;
+    this.timeModel.paymentDetailsForm.totalHour = 3;
 
     this.priceCategory = new PriceCategory();
     this.initPaymentPrice();
@@ -749,10 +803,18 @@ getDistance(){
     this.initStorageSize();
     this.initTotalHours();
     this.initStatus();
-    
-    this.moverType = MoversType.TWO;
 
-this.changeMoverPrice(); // init prices
+    this.moverType = MoversType.TWO;
+    this.changeMoverPrice(); // init prices
+    
+  }
+
+  getOrderCountStatus(){
+      this._orderService.getOrderCountStatuses()
+      .subscribe(
+        data => {this.orderCountStatus = data;
+          console.log('orderCountStatus:'+this.orderCountStatus.booked)},
+        error =>{})
   }
 
  

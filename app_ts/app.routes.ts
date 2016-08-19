@@ -7,6 +7,8 @@ import { ScheduleDemo } from './schedule/schedule.component';
 import { OrderComponent } from './content/order/order.component';
 import { ManagerComponent } from './content/manager/manager.component';
 import { DashboardComponent } from './content/dashboard/dashboard.component';
+import {EMailComponent} from "./content/e-mail/e-mail.component";
+import {CanActivateViaAuthGuard} from "./content/e-mail/routesGuard"
 
 
 
@@ -21,6 +23,7 @@ export const routes: RouterConfig = [
               { path: 'order', component:  OrderComponent },
               { path: 'manager/:id', component:  ManagerComponent },
               { path: 'dashboard', component:  DashboardComponent },
+               { path: 'email', component: EMailComponent , canActivate: [ CanActivateViaAuthGuard]}
              ] }
 ];
 

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable, OnInit} from '@angular/core';
 import { Http, Response, Headers, URLSearchParams, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import {ContactComponent} from '../login/contact';
@@ -9,12 +9,50 @@ import { AbstractService } from './abstract.service'
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
 
+enum Positions {Operator, Manager, Member}
+
+class User{
+  constructor(
+    public username: string,
+    public email:string,
+    public isLoggin:boolean,
+    public position:Positions
+  ){}
+}
+
 @Injectable()
 export class UserServiceComponent extends AbstractService{
-     constructor(private _http: Http){super()}
+
+  private _localStorageKey:string = '_0x903user_$_auth_00_1';
+
+  public user: User;
+
+     constructor(private _http: Http){
+       super();
+       if(localStorage.getItem(this._localStorageKey) == null) this.user = new User('','', false , Positions.Member);
+       else this.user = JSON.parse( localStorage.getItem(this._localStorageKey) );
+     }
 
 
         loginUser(user: ContactComponent){
+
+          this.user.username = user.username;
+          this.user.isLoggin = true;
+
+          switch (user.username){
+            case 'operator': this.user.position = Positions.Operator;
+              break;
+            case 'manager': this.user.position = Positions.Manager;
+              break;
+            default: this.user.position = Positions.Member;
+              break;
+          }
+
+          localStorage.setItem(this._localStorageKey , JSON.stringify(this.user));
+
+          console.log('User: '+this.user.username);
+          console.log('Position: '+this.user.position);
+
             const loginUrl = API_URL+'login';
             let headers = new Headers({ 'Content-Type': 'application/json' });
             let options = new RequestOptions({ headers: headers });
@@ -25,5 +63,9 @@ export class UserServiceComponent extends AbstractService{
             .map(res => res.json())
             .catch(this._handleError);
     }
-
+  
+  public goOut(){
+    this.user = new User('','', false , Positions.Member);
+    localStorage.removeItem(this._localStorageKey);
+  };
 }

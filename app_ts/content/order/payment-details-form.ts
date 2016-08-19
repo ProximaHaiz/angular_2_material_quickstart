@@ -6,7 +6,7 @@ export class PaymentDetailsForm{
     paymentMethod:string;
     truck:number;
     movers:number;
-    serviceCharge:string;
+    serviceCharge:number;
     packingMaterial:string;
     shrink:number;
     tape:number;
@@ -17,7 +17,7 @@ export class PaymentDetailsForm{
     heavyItem:string;
     heavyItemPrice:number;
     ddt:number;
-    totalForFirstHours:number;
+    numberOfHours:number;
     status:string;
     followUpDate:string;
     fieldForSalesmanComments:string;
@@ -31,4 +31,6 @@ export class PaymentDetailsForm{
     zipTo:number;
     tariff:string;
     ratePerHour:number;
+    totalPrice:number;
+    totalHour:number;
 }

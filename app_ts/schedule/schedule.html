@@ -1,4 +1,14 @@
-<div class="ContentSideSections Implementation" style="margin:0 15% 0;">
+
+<div class="ContentSideSections Implementation col-md-9 col-md-offset-1">
+    <div class="col-md-12">
+    <p-selectButton [options]="types"
+    [ngModelOptions]="{standalone: true}"
+    #val
+    (onChange)= "onChange(val)" 
+    [(ngModel)]="selectedTypes"
+     multiple="multiple"></p-selectButton>
+    <p>Selected Types: <span *ngFor="let type of selectedTypes">{{type}} </span></p>
+</div><br>
     <p-schedule [events]="events" [header]="header" defaultDate="2016-08-08" [eventLimit]="4" [editable]="true"
                 (onDayClick)="handleDayClick($event)" (onEventClick)="handleEventClick($event)"></p-schedule>
     

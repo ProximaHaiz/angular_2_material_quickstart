@@ -1,3 +1,15 @@
+<div class="col-md-2">
+  <p-accordion>
+    <p-accordionTab header="Ordaer count by status: {{orderCountStatus.totalCount}}" [selected]="false">
+      Completed: {{orderCountStatus.completed}}<br>
+      Booked: {{orderCountStatus.booked}}<br>
+      Sold: {{orderCountStatus.sold}}<br>
+      In progress: {{orderCountStatus.inProgress}}
+    </p-accordionTab>
+  </p-accordion>
+</div>
+
+
 <form class="form" method="post" (ngSubmit)="sentFullForm()" [formGroup]="orderForm">
   <div class=" main">
     <div class="row placeholders">
@@ -19,11 +31,11 @@
         <div class="col-xs-6 col-md-3">
 
           <div class="input-group ">
-            <span class="input-group-addon label_40" id="basic-addon1232153">
+            <span class="input-group-addon label_40">
               <span class="glyphicon glyphicon-home"></span> Company
             </span>
-            <div class="dropdown" style="width: 65%;">
-              <select id="packingMaterials" class="form-control" style="font-weight: 600;">
+            <div class="dropdown">
+              <select id="packingMaterials" class="form-control">
                 <option *ngFor="let item of companies"
                         (click)="selectCompany(item)">
                   {{item.name}}
@@ -33,13 +45,13 @@
           </div>
 
           <div class="input-group container-margin-3">
-            <span class="input-group-addon label_40" id="basic-addon11236">
+            <span class="input-group-addon label_40">
               <span class="glyphicon glyphicon-user"></span> Name
             </span>
             <input type="text"
-                   styleClass="ui-inputtext-text"
                    formControlName="fullName"
                    placeholder="Name"
+                   class="form-control"
                    pInputText
             />
 
@@ -47,7 +59,7 @@
 
           <div class="input-group container-margin-3">
                                     <span class="input-group-addon label_40"
-                                          id="basic-addon1723"><span class="glyphicon glyphicon-envelope"></span> E-mail </span>
+                                    ><span class="glyphicon glyphicon-envelope"></span> E-mail </span>
             <input type="text"
                    class="form-control"
                    formControlName="mail"
@@ -56,20 +68,22 @@
           </div>
 
           <div class="input-group container-margin-3">
-                                    <span class="input-group-addon label_40" id="basic-addon17432">
+                                    <span class="input-group-addon label_40">
                                     <span class="glyphicon glyphicon-earphone"></span> Phone
                                     </span>
             <input type="text"
                    formControlName="phoneNumber"
                    placeholder="Phone"
+                   class="form-control"
                    pInputText/>
           </div>
 
 
           <div class="input-group" [ngStyle]="{'margin-top': howDidYouKnowMargin}">
             <span class="qu1"><span class="glyphicon glyphicon-globe"></span> How did you hear about us?</span>
-            <div class="dropdown" style="width: 80%;">
-              <select id="packingMaterials" class="form-control" style="font-weight: 600;padding-left: 20%;">
+            <div class="dropdown">
+              <select id="packingMaterials"
+                      class="form-control w_100">
                 <option *ngFor="let item of advertisements"
                         (click)="selectAdvertisement(item)">
                   {{item.name}}
@@ -84,8 +98,8 @@
 
           <div class="input-group col-md-10">
             <span class="input-group-addon" id="basic-addon17"><span class="glyphicon glyphicon-fullscreen"></span> Size of move</span>
-            <div class="dropdown" style="width: 65%;">
-              <select id="packingMaterials" class="form-control" style="font-weight: 600;">
+            <div class="dropdown">
+              <select id="packingMaterials" class="form-control w_90">
                 <option *ngFor="let item of sizeOfMove" (click)="selectSizeOfMoves(item)">
                   {{item.name}}
                 </option>
@@ -99,7 +113,8 @@
               <div [formGroupName]="i">
 
                 <div id="loadAddressDiv" class="input-group col-md-10">
-                  <span class="input-group-addon w_30"><span class="glyphicon glyphicon-road"></span> Address from</span>
+                  <span class="input-group-addon w_30"><span
+                    class="glyphicon glyphicon-road"></span> Address from</span>
                   <input type="text"
                          class="w_90"
                          formControlName="address"
@@ -222,12 +237,11 @@
           </div>
 
           <div formArrayName="loadingAddress">
-            <div *ngFor="let address of orderForm.controls.loadingAddress.controls; let i=index" style="margin-top: 2.6%;">
+            <div *ngFor="let address of orderForm.controls.loadingAddress.controls; let i=index"
+                 style="margin-top: 2.6%;">
               <div [formGroupName]="i">
                 <div id="zipFromDiv" class="input-group">
-                  <span class="input-group-addon" style="width: 38%;">
-                    <span class="glyphicon glyphicon-list"></span> Zip from
-                  </span>
+                  <span class="input-group-addon"><span class="glyphicon glyphicon-list"></span> Zip from</span>
                   <input type="text"
                          class="w_100"
                          formControlName="zip"
@@ -246,17 +260,19 @@
           <hr>
 
           <div formArrayName="unLoadingAddress">
-            <div *ngFor="let address of orderForm.controls.unLoadingAddress.controls; let i=index" style="margin-top: 2.6%;">
+            <div *ngFor="let address of orderForm.controls.unLoadingAddress.controls; let i=index"
+                 style="margin-top: 2.6%;">
               <div [formGroupName]="i">
 
                 <div id="zipToDiv" class="input-group">
-                  <span class="input-group-addon"  style="width: 58%;" >
-                    <span class="glyphicon glyphicon-list"></span> Zip to
-                  </span>
+                                    <span style="width: 38%;"
+                                          class="input-group-addon">
+                                    <span class="glyphicon glyphicon-list"></span> Zip to
+                                    </span>
 
                   <input type="text"
                          formControlName="zip"
-                         style="width: 100%;"
+                         style="width: 105%;"
                          placeholder="Zip to"
                          pInputText
                   />
@@ -268,14 +284,6 @@
               </div>
             </div>
           </div>
-
-           <br><br><button type="button" class="btn btn-default btn-number"
-                  (click)="getDistance()"
-                  data-type="plus">
-            <span class="glyphicon glyphicon-plus"></span>
-          </button>
-
-          <br><h4>Distance:{{timeModel.orderForm.distance}}</h4>
 
         </div>
 
@@ -324,7 +332,7 @@
       <div class="col-xs-6 col-md-3">
         <div class="input-group">
           <span class="input-group-addon"><span class="glyphicon glyphicon-shopping-cart"></span> Tariff</span>
-          <div class="dropdown" style="width: 74%;">
+          <div class="dropdown">
             <select class="form-control boldC">
               <option *ngFor="let item of tariffs" (click)="selectTariff(item)">
                 {{item.name}}
@@ -332,17 +340,14 @@
             </select>
           </div>
         </div>
-        <div style="width:361%;background-color: #eee;height: 35px;margin-top: -13%;">
-
-        </div>
       </div>
 
       <div class="col-xs-6 col-md-5">
-        <div class="input-group" style="padding-left: 21.5%;z-index: 1000;">
+        <div class="input-group">
           <span class="input-group-addon"><span class="glyphicon glyphicon-credit-card"></span> Payment method</span>
-          <div class="dropdown" style="width: 60%;">
-            <select class="form-control boldC">
-              <option *ngFor="let item of paymentMethods" (click)="selectPaymentMethod(item)" >
+          <div class="dropdown">
+            <select class="form-control boldC p_40">
+              <option *ngFor="let item of paymentMethods" (click)="selectPaymentMethod(item)">
                 {{item.name}}
               </option>
             </select>
@@ -368,9 +373,8 @@
 
         <div class="input-group m_4" style="width: 300%;">
           <span class="input-group-addon"><span class="glyphicon glyphicon-credit-card"></span> Service charge</span>
-          <input style="width: 34.5%;text-align: right;padding-right: 5%;" type="text" class="form-control" placeholder="30.00"
-                 aria-describedby="basic-addon1" />
-          <div style="width:226%;background-color: #eee;height: 35px;"></div>
+          <input style="width: 34.5%;" type="text" class="form-control" placeholder="30.00"
+                 aria-describedby="basic-addon1"/>
         </div>
 
         <div class="input-group m_4 w_158">
@@ -386,20 +390,19 @@
 
         <div class="input-group m_4 w_158">
           <span class="input-group-addon"><span class="glyphicon glyphicon-resize-small"></span> Shrink</span>
-          <div class="dropdown" style="width: 41%;">
-            <select id="packingMaterials" class="form-control boldC p_25">
+          <div class="dropdown">
+            <select id="packingMaterials" class="form-control boldC p_40">
               <option *ngFor="let item of shrinks" (click)="selectShrink(item)">
                 {{item.name}}
               </option>
             </select>
           </div>
-          <div style="width:490%;background-color: #eee;height: 35px;"></div>
         </div>
 
         <div class="input-group m_4 w_158">
           <span class="input-group-addon" style="width: 32%;"><span class="glyphicon glyphicon-tag"></span> Tape</span>
-          <div class="dropdown" style="width: 41%;">
-            <select id="packingMaterials" class="form-control boldC p_25">
+          <div class="dropdown">
+            <select id="packingMaterials" class="form-control boldC p_40">
               <option *ngFor="let item of tapes" (click)="selectTape(item)">
                 {{item.name}}
               </option>
@@ -407,7 +410,7 @@
           </div>
         </div>
 
-        <div class="input-group m_4 w_158" style="z-index: 1000; width:400%;">
+        <div class="input-group m_4 w_158">
           <span class="input-group-addon"><span class="glyphicon glyphicon-inbox"></span> Heavy Item</span>
 
           <p-multiSelect [options]="heavyItems"
@@ -419,19 +422,20 @@
           </p-multiSelect>
           <!--</div>-->
         </div>
-        <div style="position:absolute;width:486%;background-color: #eee;height: 35px;margin-top: -17%;"></div>
 
         <div class="input-group m_4 w_158">
           <span class="input-group-addon"><span class="glyphicon glyphicon-road"></span> DDT</span>
-          <input style="width: 45%;"
+          <input style="width: 35.5%;"
                  type="text"
+                 style="padding-left: 10px;"
                  class="form-control boldC"
                  placeholder="Miles"
           />
         </div>
 
         <div class="input-group m_4 w_158">
-          <label for="vehicle" style="margin-right:15px;" class="input-group-addon"><span class="glyphicon glyphicon-lock"></span> Storage</label>
+          <label for="vehicle" style="margin-right:15px;" class="input-group-addon"><span
+            class="glyphicon glyphicon-lock"></span> Storage</label>
           <span class="input-group-addon">
             <input type="checkbox"
                    style="width: 20px;height: 20px;;"
@@ -439,39 +443,29 @@
                    id="vehicle"
                    value="Bike"/>
           </span>
-          <div style="width:670%;background-color: #eee;height: 35px;"></div>
         </div>
 
-        <div class="input-group m_4" style="width: 132%;">
+        <div class="input-group m_4 w_158">
           <span class="input-group-addon" id="basic-addon12346"><span class="glyphicon glyphicon-tags"></span> Discount</span>
           <input style=""
                  type="text"
                  id="discount"
+                 style="padding-left: 25%;"
                  class="form-control"
                  placeholder="0.00%"
-                 [(ngModel)]="discountValue"
-                 [ngModelOptions]="{standalone: true}"
           />
-          <span class="input-group-addon">
-             <input type="checkbox"
-                    style="width: 20px;height: 20px;;"
-                    name="vehicle"
-                    id="vehicle"
-                    value="Bike" (change)="toggleDiscount()"/>
-          </span>
 
         </div>
 
-        <div class="input-group m_4" style="width: 160%;">
+        <div class="input-group m_4 w_158">
           <span class="input-group-addon"><span class="glyphicon glyphicon-folder-close"></span> Total hours</span>
-          <div class="dropdown" style="width: 70%;">
-            <select id="packingMaterials" class="form-control boldC" style="padding-left: 25%;">
+          <div class="dropdown">
+            <select class="form-control boldC" style="padding-left: 25%;">
               <option *ngFor="let item of totalHours" (click)="selectTotalForFirst(item)">
                 {{item.name}}
               </option>
             </select>
           </div>
-          <div style="width:558%;background-color: #eee;height: 35px;"></div>
         </div>
 
       </div>
@@ -489,11 +483,11 @@
         </div>
       </div>
 
-      <div class="col-xs-6 col-md-4" style="margin-top: 0.6%;">
-        <div class="input-group" >
+      <div class="col-xs-6 col-md-4">
+        <div class="input-group m_3">
           <span class="input-group-addon"><span class="glyphicon glyphicon-dashboard"></span> Rate per hour</span>
-          <div class="dropdown" style="width: 64%;">
-            <select class="form-control boldC">
+          <div class="dropdown">
+            <select class="form-control">
               <option *ngFor="let item of ratePerHour" (click)="selectRateperhour(item)">
                 {{item.name}}
               </option>
@@ -502,43 +496,31 @@
         </div>
 
 
-        <!--<div style="position:absolute;width: 170%;margin-top: 63%;background-color: #eee;height: 8.5%;margin-left: -33.5%;"></div>
-        <div style="position:absolute;width: 193%;z-index: 1;margin-top: -20.2%;background-color: #eee;height: 8.5%;margin-left: -50%;"></div>
-
-        <div style="width: 170%;margin-top: 1%;background-color: #eee;height: 3.5%;margin-left: -36%;"></div>
-
-        <div style="width: 200%;margin-top: 13.2%;background-color: #eee;height: 3.6%;margin-left: -65.5%;"></div>
-
-        <div style="width: 190%;margin-top: 13%;background-color: #eee;height: 3.7%;margin-left: -53.5%;"></div>-->
-
-
-        <div class="input-group" style="margin-top: 71%;margin-left: -16%;">
+        <div class="input-group" style="margin-top: 68%;margin-left: -16%;">
           <span class="input-group-addon">Size of storage unit</span>
           <div class="dropdown">
-            <select id="packingMaterials" class="form-control boldC" style="width: 40%;padding-left: 10px;margin-right: 4%;">
+            <select class="form-control boldC" style="width: 40%;padding-left: 10px;margin-right: 4%;">
               <option *ngFor="let item of storageSizes" (click)="selectSizeOfStorageUnit(item)">
                 {{item.name}}
               </option>
             </select>
           </div>
 
-            <div style="margin-top: 1%;">
-              <p-calendar formControlName="storageDate"
-                          dateFormat="mm/dd/yy"
-                          timeFormat="hh:mm tt z"
-                          timeControlType="select"
-                          placeholder="Storage date"
-                          [showIcon]="true"
-                          [horizontalTimeControls]="true">
-              </p-calendar>
-            </div>
+
+          <p-calendar formControlName="storageDate"
+                      dateFormat="mm/dd/yy"
+                      timeFormat="hh:mm tt z"
+                      timeControlType="select"
+                      placeholder="Storage date"
+                      [showIcon]="true"
+                      [horizontalTimeControls]="true">
+          </p-calendar>
 
         </div>
 
-
       </div>
 
-      <div class="col-xs-6 col-md-2" style="margin-top: 0.2%;margin-left: 6%;">
+      <div class="col-xs-6 col-md-2" style="margin-top: 0.5%;">
         <input type="text"
                class="form-control right-input"
                [value]="paymentPrice.ratePerHourPrice|currency:'USD':true:'1.2-2'"
@@ -556,7 +538,6 @@
         <input type="text"
                id="packingMaterialsSum"
                class="form-control right-input"
-               style="margin-top: 4.5%;"
                placeholder="0.00"
                pInputText
         />
@@ -571,14 +552,12 @@
                class="form-control right-input"
                placeholder="0.00"
                aria-describedby="basic-addon1"
-               style="margin-top: 4%;"
                pInputText
         />
         <input type="text"
                class="form-control right-input"
                placeholder="0.00"
                [value]="timeModel.paymentDetailsForm.heavyItemPrice|currency:'USD':true:'1.2-2'"
-               style="margin-top: 4.5%;"
                pInputText
         />
 
@@ -591,20 +570,17 @@
         <input type="text"
                class="form-control right-input"
                placeholder="0.00"
-               style="margin-top: 5%;"
                pInputText
         />
         <input type="text"
                id="discountValue"
                class="form-control right-input"
-                [value]="timeModel.paymentDetailsForm.discount|currency:'USD':true:'1.2-2'"
                placeholder="0.00"
                pInputText
         />
         <input type="text"
                id="totalForHours"
                class="form-control right-input"
-               style="margin-top:4%;"
                [value]="paymentPrice.totalHourPrice|currency:'USD':true:'1.2-2'"
                placeholder="0.00"
                pInputText
@@ -666,10 +642,11 @@
       </div>
 
       <div class="input-group m_4">
-        <span class="input-group-addon" style="width: 62%;"><span class="glyphicon glyphicon-envelope"></span> E-mail</span>
+        <span class="input-group-addon" style="width: 62%;"><span
+          class="glyphicon glyphicon-envelope"></span> E-mail</span>
 
 
-        <p-splitButton  label="Save" icon="fa-check" (onClick)="save()">
+        <p-splitButton label="Save" icon="fa-check" (onClick)="save()">
           <p-splitButtonItem icon="fa-close"
                              label="email1"
                              (onClick)="openTemp1()">
@@ -701,6 +678,7 @@
   <hr>
   <button pButton type="text"
           style="margin-left: 40%;"
+          (click)="sentFullForm()"
           icon="fa-check"
           label="Submit full form">
   </button>
@@ -710,96 +688,108 @@
 <!--<button type="button" pButton (click)="showInfo()" label="Info"></button>-->
 
 
-<p-dialog header = "Avaliable cars on: {{moveDate}}" [(visible)]="display" modal="modal" showEffect="fade">
+<p-dialog header="Avaliable cars on: {{moveDate}}" [(visible)]="display" modal="modal" showEffect="fade">
 
-        Total avaliable Trucks on PM:{{vehicle.avaliableTruckAm}} <br>
-        Total avaliable Vans on PM:{{vehicle.avaliableVanAm}} <br>
-        <!--<div class="dropdown" style="width:200px;">
-                <select id="packingMaterials" class="form-control">
-                  <option *ngFor="let item of vehicleToAm"
-                          (click)="selectMoveTime(item)">
-                    {{item.type}}, {{item.vehicleRegNumber}}
-                  </option>
-                </select>
-        </div>-->
-      <!--<p-dropdown [options]="vehicleToPm"  [style]="{'width':'150px'}"
-      (click)="selectedVehiclePm()"></p-dropdown>-->
+  Total avaliable Trucks on PM:{{vehicle.avaliableTruckAm}} <br>
+  Total avaliable Vans on PM:{{vehicle.avaliableVanAm}} <br>
+  <!--<div class="dropdown" style="width:200px;">
+          <select id="packingMaterials" class="form-control">
+            <option *ngFor="let item of vehicleToAm"
+                    (click)="selectMoveTime(item)">
+              {{item.type}}, {{item.vehicleRegNumber}}
+            </option>
+          </select>
+  </div>-->
+  <!--<p-dropdown [options]="vehicleToPm"  [style]="{'width':'150px'}"
+  (click)="selectedVehiclePm()"></p-dropdown>-->
 
-      Total avaliable Trucks on AM:{{vehicle.avaliableTruckAm}} <br>
-      Total avaliable Vans on AM: {{vehicle.avaliableVanPm}}
-      <!--<div class="dropdown" style="width:200px;">
-                <select id="packingMaterials" class="form-control">
-                  <option *ngFor="let item of vehicleToPm"
-                          (click)="selectMoveTime(item)">
-                    {{item.type}}, {{item.vehicleRegNumber}}
-                  </option>
-                </select>
-      </div>-->
+  Total avaliable Trucks on AM:{{vehicle.avaliableTruckAm}} <br>
+  Total avaliable Vans on AM: {{vehicle.avaliableVanPm}}
+  <!--<div class="dropdown" style="width:200px;">
+            <select id="packingMaterials" class="form-control">
+              <option *ngFor="let item of vehicleToPm"
+                      (click)="selectMoveTime(item)">
+                {{item.type}}, {{item.vehicleRegNumber}}
+              </option>
+            </select>
+  </div>-->
 
-        <footer>
-            <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-                <button type="button" pButton icon="fa-close" (click)="display=false" label="Cancel"></button>
-                <button type="button" pButton icon="fa-check" (click)="display=false" label="Apply"></button>
-            </div>
-        </footer>
+  <footer>
+    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+      <button type="button" pButton icon="fa-close" (click)="display=false" label="Cancel"></button>
+      <button type="button" pButton icon="fa-check" (click)="display=false" label="Apply"></button>
+    </div>
+  </footer>
 </p-dialog>
 
 
 <script type="text/javascript" src="src/js/datepicker.js"></script>
 
 <style>
-  .right-input{
-    margin-top: 3.5%;
+  .right-input {
+    margin-top: 3%;
     width: 60%;
-    font-weight: 600;
-    text-align: right;
-    padding-right: 10%;;
   }
-  .m_4{
+
+  .m_4 {
     margin-top: 4%;
   }
-  .label_40{
+
+  .label_40 {
     width: 40%;
   }
-  .container-margin-3{
+
+  .container-margin-3 {
     margin-top: 3%;
   }
-  .boldC{
+
+  .boldC {
     font-weight: bold;
   }
-  .w_158{
+
+  .w_158 {
     width: 158%;
   }
-  .w_100{
+
+  .w_100 {
     width: 100%;
   }
-  .w_30{
+
+  .w_30 {
     width: 30%;
   }
-  .w_90{
+
+  .w_90 {
     width: 90%;
   }
-  .w_125{
+
+  .w_125 {
     width: 125%;
   }
-  .qu1{
+
+  .qu1 {
     font-size: 1.34em;
     margin-left: 2px;
   }
-  .m_2{
+
+  .m_2 {
     margin-top: 2%;
   }
-  .m_3{
+
+  .m_3 {
     margin-top: 3%;
   }
-  .checkbox-addon{
+
+  .checkbox-addon {
     width: 20px;
     height: 20px;
   }
-  .p_40{
+
+  .p_40 {
     padding-left: 40%;
   }
-  .p_25{
+
+  .p_25 {
     padding-left: 25%;
   }
 </style>

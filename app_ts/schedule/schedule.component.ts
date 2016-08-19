@@ -2,17 +2,21 @@ import {Component, OnInit, ChangeDetectorRef, Input} from '@angular/core';
 import {HTTP_PROVIDERS}    from '@angular/http';
 import {
   Schedule, Button, InputText, Calendar, Dialog, Checkbox, TabPanel, TabView,
-  CodeHighlighter
+  CodeHighlighter,SelectButton, SelectItem
 } from "primeng/primeng";
 import {EventService} from '../service/calendar.service';
 import { Event} from '../content/order/event';
 import { ROUTER_DIRECTIVES, Router, ActivatedRoute} from '@angular/router';
+import { OrderCountStatus } from '../content/order/interfaces/order-count-status';
+import { OrderStatusString } from './utils/order-status-string';
+// import { OrderCountStatus } from ''
+
 
 @Component({
   templateUrl: 'app_ts/schedule/schedule.html',
   styleUrls:['src/css/fullcalendar.css'],
   directives: [Schedule, Button, InputText, Calendar,
-    Dialog, Checkbox, TabPanel, TabView, Button, CodeHighlighter, ROUTER_DIRECTIVES],
+  Dialog, Checkbox, TabPanel, TabView, Button, CodeHighlighter, SelectButton,ROUTER_DIRECTIVES],
   providers: [HTTP_PROVIDERS, EventService],
 
   styles: [`
@@ -27,6 +31,18 @@ import { ROUTER_DIRECTIVES, Router, ActivatedRoute} from '@angular/router';
 })
 
 export class ScheduleDemo implements OnInit {
+   private COMPLETED:string ='Completed';
+   private BOOKED:string = 'Booked';
+   private IN_PROGRESS = 'In progress';
+   private SOLD = 'Sold';
+   private types: SelectItem[];
+   private selectedType: string;
+   private selectedTypes: string[] = ['Completed','Booked','In progress','Sold'];
+   private orderStatusString:OrderStatusString;
+   selected(){
+     console.log('select-component')
+   }
+
 
   private events:Event[];
   header:any;
@@ -37,12 +53,60 @@ export class ScheduleDemo implements OnInit {
   idGen:number = 100;
   private errorMessage:string;
   private currentDate:string;
+  private orderCountStatus:OrderCountStatus;
 
  
   constructor(private _eventService:EventService,
               private cd:ChangeDetectorRef,
               private _router: Router,
               private route: ActivatedRoute) {
+      
+      this.orderCountStatus = new OrderCountStatus();
+      this.updateCountByStatus();
+      
+  }
+
+  onChange(){
+    this.initOrderByStatusString();
+    this.selectedTypes.forEach(element => {
+      console.log('item:'+element);
+      switch(element){
+        case this.COMPLETED:
+        this.orderStatusString.completed = element;
+        break;
+
+        case this.BOOKED:
+        this.orderStatusString.booked = element;
+        break;
+
+        case this.IN_PROGRESS:
+        this.orderStatusString.inProgress = element;
+        break;
+
+        case this.SOLD:
+        this.orderStatusString.sold = element;
+        break;
+      }
+      console.log('item:'+JSON.stringify(this.orderStatusString));
+    });
+    console.log('-----------------');
+
+    this.getEventsByOrderStatus();
+
+  }
+
+    getEventsByOrderStatus() {
+    this._eventService.getEventsByOrderStatus(this.orderStatusString)
+      .subscribe(
+        events=>{
+           this.currentDate = events.currentDate;
+          this.events = events.calendarEntity; //get all events
+          this.orderCountStatus = events.countByStatus; // get number of orders by orderStatus
+          this.updateCountByStatus(); // update current number of orderStatus
+          console.log('CountByStatus:'+this.orderCountStatus.booked); 
+         },
+        error=>this.errorMessage = <any>error
+      )
   }
 
 
@@ -52,10 +116,23 @@ export class ScheduleDemo implements OnInit {
         events=>{
         //    this.currentDate = events.currentDate;
         // console.log('currentDate:'+this.currentDate)
-          this.events = events.calendarEntity;
+          this.events = events.calendarEntity; //get all events
+          this.orderCountStatus = events.countByStatus; // get number of orders by orderStatus
+          this.updateCountByStatus(); // update current number of orderStatus
+          console.log('CountByStatus:'+this.orderCountStatus.booked);
+          
          },
         error=>this.errorMessage = <any>error
       )
+  }
+
+  private updateCountByStatus(){
+    this.types=[];
+       this.types.push({label: 'Completed('+this.orderCountStatus.completed+')', value: this.COMPLETED});
+        this.types.push({label: 'Booked('+this.orderCountStatus.booked+')', value: this.BOOKED});
+        this.types.push({label: 'In Progress('+this.orderCountStatus.inProgress+')', value: this.IN_PROGRESS});
+        this.types.push({label: 'Sold('+this.orderCountStatus.sold+')', value: this.SOLD});
+
   }
 
   getCurrentDate(){
@@ -69,7 +146,16 @@ export class ScheduleDemo implements OnInit {
       )
   }
 
+private initOrderByStatusString(){
+  this.orderStatusString={
+    booked:'',
+    completed:'',
+    sold:'',
+    inProgress:''
+  }
+}
   ngOnInit() {
+    this.initOrderByStatusString();
     // this.getCurrentDate();
     this.getEvents();
     this.header = {
@@ -169,5 +255,7 @@ export class MyEvent {
   end:string;
   allDay:boolean = true;
 }
+
+
 
 

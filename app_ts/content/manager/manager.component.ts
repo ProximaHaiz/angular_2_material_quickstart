@@ -34,14 +34,22 @@ export class ManagerComponent implements OnInit {
         private orders:ManagerDTO[];
         private errorMessage:string;
         private date:Date;
+        private modalInfo:ModalInfo ;
      
        constructor( private _router: Router,
                     private route: ActivatedRoute,
                     private _fb: FormBuilder,
                     private _orderService: OrderService){
-                        
 
     }
+
+ 
+
+  public addressFrom(title:string, data:string){
+    this.modalInfo.title = title;
+    this.modalInfo.data = data;
+    // $('#myModal').modal('toggle');
+  };
 
       getOrders() {
     this._orderService.getOrder(this.id)
@@ -59,6 +67,7 @@ export class ManagerComponent implements OnInit {
   }
 
   ngOnInit(){
+      this.modalInfo = new ModalInfo();
          console.log('ManagerDTO ngOnInit')
             this.sub = this.route.params.subscribe(params =>{
                 let id = +params['id'];
@@ -68,3 +77,8 @@ export class ManagerComponent implements OnInit {
             })
 }   
 }
+
+    export  class ModalInfo {
+        title:string;
+        data: string;
+  };
