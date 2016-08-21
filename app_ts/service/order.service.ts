@@ -54,4 +54,14 @@ export class OrderService extends AbstractService{
         .catch(this._handleError)
    }
 
+   sentMail(mail:string){
+        let params = new URLSearchParams();
+             params.set('email',mail);
+      
+        // console.log('User send conf-pass:'+ user.reset_password);
+        return this._http.get(API_URL+'order/email',{search: params})
+        .map(res =><Vehicle>res.json())
+        .catch(this._handleError)
+   }
+
 }

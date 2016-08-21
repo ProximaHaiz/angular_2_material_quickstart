@@ -328,6 +328,18 @@ export class OrderComponent implements OnInit {
     this.timeModel.orderForm.estimateDateTime = this.timeEstimate;
   }
 
+  sentEmail(){
+    console.log('mail = '+this.orderForm.controls['mail'].value);
+    this._orderService.sentMail(this.orderForm.controls['mail'].value).subscribe(
+        data => {
+          console.log('Email sent')
+        },
+        error => {
+          console.log('Error: sentOrderForm ' + error)
+        });
+
+  }
+
   private createTestEntityes(){
     //fill orderFrom
     this.timeModel.orderForm.advertisement='advertisement';
@@ -342,7 +354,7 @@ export class OrderComponent implements OnInit {
           this.timeModel.orderForm.unloadingAddress=[
             {address:'testAddressTo1',zip:1111,floor:1},
             {address:'testAddressTo2',zip:2222,floor:2}]
-          this.timeModel.orderForm.mail='textmesweet@gmail.com';
+          this.timeModel.orderForm.mail='froade.nov@gmail.com';
           this.timeModel.orderForm.moveDate='2016-08-08';
           this.timeModel.orderForm.moveDateTime='03:00-04:00 a.m.';
               this.timeModel.orderForm.packingDate='2016-08-08';
