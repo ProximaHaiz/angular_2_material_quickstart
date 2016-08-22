@@ -1,0 +1,111 @@
+<div class="panel panel-default" style="margin-top: 5%;box-shadow: 15px 15px 35px rgba(0,0,0,0.1) , -15px 15px 35px rgba(0,0,0,0.1)">
+    <!-- Default panel contents -->
+    <div class="panel-heading">
+        <h3>
+            <span class="glyphicon glyphicon-envelope"></span> Order list
+        </h3>
+
+    </div>
+    <table class="table table-hover table-striped table-sortable">
+        <thead>
+        <tr>
+            <th *ngFor="let column of columns" [class]="selectedClass(column.variable)" (click)="changeSorting(column.variable)">
+                <span [class]="column.iconClass"></span> {{column.display}}
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr *ngFor="let object of data | orderBy : convertSorting()" [class]="getTrClass(object.Status)" (click)="startModal(object)">
+            <td *ngFor="let column of columns">
+                {{object[column.variable] | format : column.filter}}
+            </td>
+        </tr>
+
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog bs-example-modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">
+                    <span class="glyphicon glyphicon-file"></span>
+                    Order: <strong>{{selectedOrder.Id}}</strong>
+                </h4>
+            </div>
+            <div class="modal-body">
+
+                <div>
+                    <span class="glyphicon glyphicon-calendar"></span> {{selectedOrder.Date | format : 'Date'}}
+                </div>
+
+                <div>
+                    <span class="glyphicon glyphicon-user"></span> {{selectedOrder.Name}}
+                </div>
+
+                <div class="input-group">
+          <span class="input-group-addon">
+              <span class="glyphicon glyphicon-list-alt"></span>
+            </span>
+                    <div class="dropdown" style="width: 40%;">
+                        <select [(ngModel)]="selectedOrder.Status" class="form-control">
+                            <option [value]="status" *ngFor="let status of statuses">{{status}}</option>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                <button type="button" class="btn btn-primary">Сохранить изменения</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<style>
+    .table-sortable > thead > tr > th {
+        cursor: pointer;
+        position: relative;
+        background-image: none;
+    }
+
+    .table-sortable > thead > tr > th:after,
+    .table-sortable > thead > tr > th.sort-false:after,
+    .table-sortable > thead > tr > th.sort-true:after {
+        font-family: FontAwesome;
+        padding-left: 5px;
+    }
+
+    .table-sortable > thead > tr > th:after {
+        content: "\f0dc";
+        color: #ddd;
+    }
+    .table-sortable > thead > tr > th.sort-false:after {
+        content: "\f0de";
+        color: #767676;
+    }
+    .table-sortable > thead > tr > th.sort-true:after {
+        content: "\f0dd";
+        color: #767676;
+    }
+    th:hover{
+        cursor: pointer;
+        background-color: #fafafa;
+        box-shadow: 4px 4px 8px rgba(0,0,0,.1), -4px 4px 8px rgba(0,0,0,.1);
+    }
+    th{
+        text-align: center;
+    }
+    td{
+        text-align: center;
+    }
+    tr{
+        cursor: pointer;
+    }
+</style>

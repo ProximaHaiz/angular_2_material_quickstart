@@ -9,6 +9,7 @@ import { Event} from '../content/order/event';
 import { ROUTER_DIRECTIVES, Router, ActivatedRoute} from '@angular/router';
 import { OrderCountStatus } from '../content/order/interfaces/order-count-status';
 import { OrderStatusString } from './utils/order-status-string';
+import {UserServiceComponent} from "../service/user.service";
 // import { OrderCountStatus } from ''
 
 
@@ -35,9 +36,10 @@ export class ScheduleDemo implements OnInit {
    private BOOKED:string = 'Booked';
    private IN_PROGRESS = 'In progress';
    private SOLD = 'Sold';
+   private LOST = 'Lost'
    private types: SelectItem[];
    private selectedType: string;
-   private selectedTypes: string[] = ['Completed','Booked','In progress','Sold'];
+   private selectedTypes: string[] = ['Completed','Booked','In progress','Sold', 'Lost'];
    private orderStatusString:OrderStatusString;
    selected(){
      console.log('select-component')
@@ -59,7 +61,8 @@ export class ScheduleDemo implements OnInit {
   constructor(private _eventService:EventService,
               private cd:ChangeDetectorRef,
               private _router: Router,
-              private route: ActivatedRoute) {
+              private userService: UserServiceComponent,
+              private route: ActivatedRoute, private router: Router) {
       
       this.orderCountStatus = new OrderCountStatus();
       this.updateCountByStatus();
@@ -132,6 +135,7 @@ export class ScheduleDemo implements OnInit {
         this.types.push({label: 'Booked('+this.orderCountStatus.booked+')', value: this.BOOKED});
         this.types.push({label: 'In Progress('+this.orderCountStatus.inProgress+')', value: this.IN_PROGRESS});
         this.types.push({label: 'Sold('+this.orderCountStatus.sold+')', value: this.SOLD});
+        this.types.push({label: 'Lost('+this.orderCountStatus.lost+')', value: this.LOST});
 
   }
 
@@ -151,7 +155,8 @@ private initOrderByStatusString(){
     booked:'',
     completed:'',
     sold:'',
-    inProgress:''
+    inProgress:'',
+    lost: ''
   }
 }
   ngOnInit() {
@@ -197,7 +202,15 @@ private initOrderByStatusString(){
     // this.dialogVisible = true;
     console.log('url:'+ e.calEvent.url);
       console.log('id:'+ e.calEvent.orderId);
-     this._router.navigate(['/content/manager', e.calEvent.orderId]);
+
+     if(this.userService.user.position == 0){
+       this._router.navigate( ['/content/order', e.calEvent.orderId] );
+     }
+     else if(this.userService.user.position == 3){
+         this._router.navigate(['/content/counterManage', ]);
+     }
+     else this._router.navigate(['/content/manager', e.calEvent.orderId]);
+
   }
 
   saveEvent() {

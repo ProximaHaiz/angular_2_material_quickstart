@@ -3,6 +3,6 @@ export class OrderCountStatus{
     completed:number;
     inProgress:number;
     sold:number;
+    lost:number;
     totalCount:number;
-
 }

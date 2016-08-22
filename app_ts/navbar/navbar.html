@@ -1,5 +1,9 @@
  <nav class="navbar-inverse navbar-fixed-top spaces text-center" role="navigation">
+     <div style="position: absolute;width: 72px;height: 64px;margin-left: -1%;">
+         <img src="logo.png" style="width: 100%;">
+     </div>
     <div class="container ">
+
         <div class="navbar-header col-sm-3">
          <button type="button" class="navbar-toggle" data-toggle="collapse"
           data-target="#navbar">
@@ -9,14 +13,15 @@
 	    <span class="icon-bar"></span>
         </button>
 
-            <a class="navbar-brand" [routerLink]="['/content/schedule']"><span class="glyphicon glyphicon-home" ></span> Home</a>
-             <a class="navbar-brand" [routerLink]="['/content']">Content</a>
+
+            <a *ngIf="userService.user.isLoggin" class="navbar-brand" [routerLink]="['/content/schedule']"><span class="glyphicon glyphicon-home" ></span> Home</a>
+            <a *ngIf="userService.user.isLoggin" class="navbar-brand" [routerLink]="['/content']">Content</a>
 
         </div>
        
         <div class="navbar-collapse collapse spaces" id="navbar">
                 
-           <div class="form-group header-input col-md-4 ">
+           <div class="form-group header-input col-md-3 ">
                 <!--<input class="form-control input-md"  type="text"
                 (keyup)="updateValue()"  [formControl] ="searchField"
                   placeholder="Search...">-->
@@ -24,10 +29,16 @@
 
                 <div class="col-md-4">
                     <ul class="nav navbar-nav navbar-rightnavbar-height navbar-height">
-                        <li><a [routerLink]="['/register']" > <span class="glyphicon glyphicon-user"></span>Sign up</a></li>
-                        <li><a [routerLink]="['/login']" ><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-                         <li><a [routerLink]="['/content/schedule']" ><span class="glyphicon glyphicon-log-in"></span> Schedule</a></li>
-                        <li><a th:href="@{/logout}" href="/logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+                        <li *ngIf="!userService.user.isLoggin"><a [routerLink]="['/register']" > <span class="glyphicon glyphicon-user"></span>Sign up</a></li>
+                        <li *ngIf="!userService.user.isLoggin"><a [routerLink]="['/login']" ><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+                        <li *ngIf="userService.user.isLoggin"><a [routerLink]="['/content/schedule']" ><span class="glyphicon glyphicon-log-in"></span> Schedule</a></li>
+                        <li *ngIf="userService.user.isLoggin"><a (click)="logout()"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-md-2" *ngIf="userService.user.isLoggin">
+                    <ul class="nav navbar-nav navbar-rightnavbar-height navbar-height">
+                        <li><a><span class="glyphicon glyphicon-user"></span>Logged as: <span style="color: whitesmoke">{{userService.user.username}}</span></a></li>
                     </ul>
                 </div>
         </div>

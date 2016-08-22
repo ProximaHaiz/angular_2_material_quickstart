@@ -6,7 +6,7 @@
                 <ul class="nav of aox">
                     <li>
                     </li>
-                    <li *ngIf="userService.user.position == _positions.Operator">
+                    <li>
                         <a  [routerLink]="['/content/dashboard']" title="Dashboard" data-toggle="tooltip">
                             <span class="glyphicon glyphicon-search bv aie"></span>
                         </a>
@@ -36,9 +36,15 @@
                             <span class="glyphicon glyphicon-usd"></span>
                         </a>
                     </li>
-                    <li>
+                    <li *ngIf="userService.user.position == _positions.Manager">
                         <a  [routerLink]="['/content/manager', 0]" title="" data-toggle="tooltip">
                             <span class="glyphicon glyphicon-search bv aak"></span>
+                        </a>
+                    </li>
+
+                    <li *ngIf="userService.user.position == _positions.Manager">
+                        <a  [routerLink]="['/content/orderList']" title="" data-toggle="tooltip">
+                            <span class="glyphicon glyphicon-search bv aak"></span>OL
                         </a>
                     </li>
 

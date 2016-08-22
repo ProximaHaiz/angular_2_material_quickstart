@@ -6,6 +6,7 @@ import {
 } from '@angular/forms';
 import{DataHandlerService} from '../service/data-handler.service';
 import {Subject} from "rxjs/Subject";
+import {UserServiceComponent} from "../service/user.service";
 
 @Component({
     selector:'nav-bar',
@@ -19,7 +20,7 @@ export class NavBarComponent implements OnInit{
     private searchStream = new Subject<string>();
     private errorMessage: string;
     
-    constructor(private _dataHandlerService: DataHandlerService){}
+    constructor(private _dataHandlerService: DataHandlerService, public userService: UserServiceComponent){}
     
     
  ngOnInit(): any{
@@ -35,6 +36,9 @@ export class NavBarComponent implements OnInit{
             
   updateValue(){
               this.searchStream.next(this.searchField.value); 
-        }  
+        }
+    public logout(){
+        this.userService.goOut();
+    };
 
 }

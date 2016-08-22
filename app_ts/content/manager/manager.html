@@ -6,7 +6,10 @@
                 <!--<h2 class="page-header "> Manager board </h2>-->
                 <div class="panel panel-default">
                     <!-- Default panel contents -->
-                    <div class="panel-heading">Manager board</div>
+                    <div class="panel-heading">
+                        Manager board
+                        <h2 style="position: absolute;margin-top: -1.7%;margin-left: 87%;cursor: pointer;" (click)="openModal()"><span class="glyphicon glyphicon-cog"></span> <span *ngIf="newAnswers !=0" style="margin-top: -10px;" class="badge">{{newAnswers}}</span></h2>
+                    </div>
 
                     <!-- Table -->
                     <table class="table">
@@ -87,42 +90,42 @@
                                 <div>
 
                                       <div class="input-group">
-                                        <span class="input-group-addon" style="width: 28.5%;">Truck</span>
-                                        <div class="dropdown"style="width: 100%;">
-                                            <select class="form-control">
+                                        <span class="input-group-addon" style="width: 42.5%;">Truck</span>
+                                        <div class="dropdown"style="width: 165%;">
+                                            <select class="form-control" #selectTruck>
                                                 <option *ngFor="let vehicle of item.vehicles">
                                                     {{vehicle.type+' '+vehicle.vehicleRegNumber}}
                                                 </option>
                                             </select>
                                         </div>
-                                        <span class="input-group-addon sms-btn"><span class="glyphicon glyphicon-envelope"></span></span>
+                                        <!--<span class="input-group-addon sms-btn" (click)="sendMessage('Truck', selectTruck.selectedIndex)"><span class="glyphicon glyphicon-envelope"></span></span>-->
                                       </div>
                                      <!--<button style="position: absolute;margin-left: 17.5%;margin-top: -2.2%;" type="button" class="btn btn-sm btn-pill btn-primary">sms</button>-->
 
 
                                     <!--<p-->
                                     <div class="input-group" style="margin-top: 2%;">
-                                        <span class="input-group-addon" style="width: 28.5%;">Forman</span>
+                                        <span class="input-group-addon" style="width: 28.5%;">Foreman</span>
                                         <div class="dropdown" style="width: 100%;">
-                                            <select  class="form-control">
+                                            <select  class="form-control" #selectForeman>
                                                 <option *ngFor="let forman of item.foremans">
                                                     {{forman.firstName+' '+forman.lastName}}
                                             </select>
                                         </div>
-                                      <span class="input-group-addon sms-btn"><span class="glyphicon glyphicon-envelope"></span></span>
+                                      <span class="input-group-addon sms-btn" (click)="sendMessage('Foreman', selectForeman.selectedIndex)"><span class="glyphicon glyphicon-envelope"></span></span>
                                     </div>
                                    <!--<button style="position: absolute;margin-left: 17.5%;margin-top: -2.1%;" type="button" class="btn btn-sm btn-pill btn-primary">sms</button>-->
                                     <!--/>-->
                                     <div class="input-group" style="margin-top: 2%;">
                                         <span class="input-group-addon" style="width: 28.5%;">Driver</span>
                                         <div class="dropdown" style="width: 100%;">
-                                            <select class="form-control">
+                                            <select class="form-control" #selectDriver>
                                                 <option *ngFor="let driver of item.drivers">
                                                     {{driver.firstName+' '+driver.lastName}}
                                                 </option>
                                             </select>
                                         </div>
-                                      <span class="input-group-addon sms-btn"><span class="glyphicon glyphicon-envelope"></span></span>
+                                      <span class="input-group-addon sms-btn" (click)="sendMessage('Driver', selectDriver.selectedIndex)"><span class="glyphicon glyphicon-envelope"></span></span>
                                     </div>
                                   <!--<button style="position: absolute;margin-left: 17.5%;margin-top: -2.1%;" type="button" class="btn btn-sm btn-pill btn-primary">sms</button>-->
 
@@ -130,27 +133,50 @@
                                     <div class="input-group" style="margin-top: 2%;">
                                         <span class="input-group-addon" style="width: 28.5%;">Mover</span>
                                         <div class="dropdown" style="width: 100%;" >
-                                            <select class="form-control" id="movers">
+                                            <select class="form-control" id="movers" #selectMover>
                                                 <option *ngFor="let mover of item.moverss">
                                                         {{mover.firstName+' '+ mover.lastName}}
                                                 </option>
                                             </select>
                                         </div>
-                                      <span class="input-group-addon sms-btn"><span class="glyphicon glyphicon-envelope"></span></span>
+                                      <span class="input-group-addon sms-btn" (click)="sendMessage('Mover', selectMover.selectedIndex)"><span class="glyphicon glyphicon-envelope"></span></span>
                                     </div>
                                   <!--<button style="position: absolute;margin-left: 17.5%;margin-top: -2.1%;" type="button" class="btn btn-sm btn-pill btn-primary">sms</button>-->
                                     <!--/>-->
 
 
+                                   <!-- <div formArrayName="helpers">
+
+                                        <div *ngFor="let helper of orderForm.controls.helpers.controls; let i=index" class="m_2">
+                                            <div [formGroupName]="i">
+
+                                                <div class="input-group col-md-10">
+                                                    <span class="input-group-addon w_30"><span class="glyphicon glyphicon-road"></span> Helpers</span>
+                                                    <input type="text"
+                                                           class="w_90"
+                                                           formControlName="helper"
+                                                           placeholder="Helper"
+                                                           pInputText/>
+                                                           <span class="glyphicon glyphicon-remove pull-right" style="cursor:pointer"
+                                                           *ngIf="orderForm.controls.helpers.controls.length > 1"
+                                                           (click)="removeAddressFrom(i)"></span>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    -->
+
                                     <div class="input-group" style="margin-top: 2%;">
-                                        <span class="input-group-addon" style="width: 62%;">Helper</span>
-                                        <div class="dropdown" style="width: 70%;">
-                                            <select class="form-control">
+                                        <span class="input-group-addon" style="width: 28.5%;">Helper</span>
+                                        <div class="dropdown">
+                                            <select class="form-control" #selectHelper>
                                                 <option *ngFor="let helper of item.helpers">
                                                     {{helper.firstName+' '+helper.lastName}}
                                                 </option>
                                             </select>
                                         </div>
+                                        <span class="input-group-addon sms-btn" (click)="sendMessage('Helper', selectHelper.selectedIndex)"><span class="glyphicon glyphicon-envelope"></span></span>
                                     </div>
                                 </div>
                             </td>
@@ -293,18 +319,54 @@
      <div class="modal-content">
        <div class="modal-header">
          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-         <h4 class="modal-title" id="myModalLabel">{{modalInfo.title}}</h4>
+         <h4 class="modal-title" id="myModalLabel">
+             <h3>Sent messages</h3>
+         </h4>
        </div>
        <div class="modal-body">
-        {{modalInfo.data}}
+       <!-- <ul>
+            <li *ngFor="let message of sentMessages">
+                <span>{{message.fullName}}</span>
+                <span>{{message.phone}}</span>
+                <span>
+                    <span *ngIf="!message.isConfirm" class="glyphicon glyphicon-remove"></span>
+                     <span *ngIf="message.isConfirm" class="glyphicon glyphicon-ok"></span>
+                </span>
+            </li>
+        </ul>
+        -->
+           <table class="table table-hover">
+
+               <thead>
+                   <tr>
+                       <th>
+                           <div class="input-group">
+                              <span class="glyphicon glyphicon-user"></span> Person
+                           </div>
+                       </th>
+                       <th>Phone</th>
+                       <th>Is confirm</th>
+                   </tr>
+               </thead>
+               <tbody>
+                  <tr *ngFor="let message of sentMessages" [className]="getTrClass(message.confirm)">
+                      <td>{{message.fullName}}</td>
+                      <td>{{message.phone}}</td>
+                      <td>
+                          <span *ngIf="!message.confirm" class="glyphicon glyphicon-remove" style="color:red;"></span>
+                          <span *ngIf="message.confirm" class="glyphicon glyphicon-ok" style="color:green;"></span>
+                      </td>
+                  </tr>
+               </tbody>
+           </table>
        </div>
        <div class="modal-footer">
          <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
-         <button type="button" class="btn btn-primary">Сохранить изменения</button>
        </div>
      </div>
    </div>
  </div>
+
 
  <style>
    .sms-btn{

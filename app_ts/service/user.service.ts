@@ -8,8 +8,9 @@ import { AbstractService } from './abstract.service'
 
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
+import {Router} from "@angular/router";
 
-enum Positions {Operator, Manager, Member}
+enum Positions {Operator, Manager, Administrator, Counter, Member}
 
 class User{
   constructor(
@@ -27,7 +28,7 @@ export class UserServiceComponent extends AbstractService{
 
   public user: User;
 
-     constructor(private _http: Http){
+     constructor(private _http: Http, private router: Router){
        super();
        if(localStorage.getItem(this._localStorageKey) == null) this.user = new User('','', false , Positions.Member);
        else this.user = JSON.parse( localStorage.getItem(this._localStorageKey) );
@@ -41,9 +42,17 @@ export class UserServiceComponent extends AbstractService{
 
           switch (user.username){
             case 'operator': this.user.position = Positions.Operator;
+              this.router.navigate(['/content']);
               break;
             case 'manager': this.user.position = Positions.Manager;
+                this.router.navigate(['/content/orderList']);
               break;
+            case 'admin': this.user.position = Positions.Administrator;
+              this.router.navigate(['/adminPage']);
+                  break;
+            case 'counter': this.user.position = Positions.Counter;
+              this.router.navigate(['/content']);
+                  break;
             default: this.user.position = Positions.Member;
               break;
           }
@@ -67,5 +76,6 @@ export class UserServiceComponent extends AbstractService{
   public goOut(){
     this.user = new User('','', false , Positions.Member);
     localStorage.removeItem(this._localStorageKey);
+    this.router.navigate(['/login'])
   };
 }

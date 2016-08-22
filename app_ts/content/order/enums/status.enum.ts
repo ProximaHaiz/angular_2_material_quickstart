@@ -3,4 +3,5 @@ export enum StatusType{
     IN_PROCESS,
     COMPLETED,
     SOLD,
+    LOST
 }

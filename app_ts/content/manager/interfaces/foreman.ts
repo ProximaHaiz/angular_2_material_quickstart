@@ -3,5 +3,6 @@ export interface Employee{
         lastName:string;
         mail:string;
         phone:string;
+        id:number;
         
 }

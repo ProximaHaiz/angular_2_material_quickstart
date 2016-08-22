@@ -22,8 +22,11 @@
             <span class="input-group-addon label_40" id="basic-addon1232153">
               <span class="glyphicon glyphicon-home"></span> Company
             </span>
-            <div class="dropdown" style="width: 65%;">
-              <select id="packingMaterials" class="form-control" style="font-weight: 600;">
+            <div class="dropdown" style="">
+              <select class="form-control"
+                      style="font-weight: 600;"
+                      [(ngModel)]="timeModel.orderForm.company"
+                      [ngModelOptions]="{standalone: true}">
                 <option *ngFor="let item of companies"
                         (click)="selectCompany(item)">
                   {{item.name}}
@@ -42,6 +45,13 @@
                    placeholder="Name"
                    pInputText
             />
+
+            <!--<input *ngIf='userService.user.isLoggin'type="text"
+                   styleClass="ui-inputtext-text"
+                   [value]="timeModel.orderForm.fullName"
+                   placeholder="Name"
+                   pInputText
+            />-->
 
           </div>
 
@@ -69,7 +79,7 @@
           <div class="input-group" [ngStyle]="{'margin-top': howDidYouKnowMargin}">
             <span class="qu1"><span class="glyphicon glyphicon-globe"></span> How did you hear about us?</span>
             <div class="dropdown" style="width: 80%;">
-              <select id="packingMaterials" class="form-control" style="font-weight: 600;padding-left: 20%;">
+              <select class="form-control" style="font-weight: 600;padding-left: 20%;" [(ngModel)]="timeModel.orderForm.advertisement" [ngModelOptions]="{standalone: true}">
                 <option *ngFor="let item of advertisements"
                         (click)="selectAdvertisement(item)">
                   {{item.name}}
@@ -84,8 +94,8 @@
 
           <div class="input-group col-md-10">
             <span class="input-group-addon" id="basic-addon17"><span class="glyphicon glyphicon-fullscreen"></span> Size of move</span>
-            <div class="dropdown" style="width: 65%;">
-              <select id="packingMaterials" class="form-control" style="font-weight: 600;">
+            <div class="dropdown" style="width: 90%;">
+              <select id="packingMaterials" class="form-control" style="font-weight: 600;" [(ngModel)]="timeModel.orderForm.sizeOfMove" [ngModelOptions]="{standalone: true}">
                 <option *ngFor="let item of sizeOfMove" (click)="selectSizeOfMoves(item)">
                   {{item.name}}
                 </option>
@@ -117,9 +127,10 @@
           <hr>
 
           <div formArrayName="unLoadingAddress">
-            <div *ngFor="let address of orderForm.controls.unLoadingAddress.controls; let i=index" class="m_2">
+            <div *ngFor="let address of orderForm.controls.unLoadingAddress.controls; let i=index" style="margin-top: 2.6%;">
               <div [formGroupName]="i">
-                <div id="unloadAddressDiv" class="input-group col-md-10">
+
+              <div id="unloadAddressDiv" class="input-group col-md-10">
                                     <span class="input-group-addon"
                                           style="width: 34%;"
                                           id="basic-addon1435"><span class="glyphicon glyphicon-road"></span>  Address to
@@ -149,11 +160,12 @@
                         #val
                         (onSelect)="calendarDateSelect(val)"
                         [monthNavigator]="true"
+                        [value]="timeModel.orderForm.moveDate"
                         [yearNavigator]="true"></p-calendar>
           </div>
           <div class="btn-group" style="margin-left: -5%;">
             <div class="dropdown drowdown-width" style="width: 125%;">
-              <select id="packingMaterials" class="form-control">
+              <select id="packingMaterials" class="form-control" [(ngModel)]="timeMove" [ngModelOptions]="{standalone: true}">
                 <option *ngFor="let item of time"
                         (click)="selectMoveTime(item)">
                   {{item}}
@@ -174,7 +186,7 @@
 
           <div class="btn-group container-margin-3" style="margin-left: -5%;">
             <div class="dropdown drowdown-width w_125">
-              <select class="form-control">
+              <select class="form-control" [(ngModel)]="timePackage" [ngModelOptions]="{standalone: true}">
                 <option *ngFor="let item of time"
                         (click)="selectPackingTime(item)">
                   {{item}}
@@ -196,7 +208,7 @@
 
           <div class="btn-group container-margin-3" style="margin-left: -5%;  ">
             <div class="dropdown drowdown-width w_125">
-              <select class="form-control">
+              <select class="form-control" [(ngModel)]="timeEstimate" [ngModelOptions]="{standalone: true}">
                 <option *ngFor="let item of time"
                         (click)="selectEstimateTime(item)">
                   {{item}}
@@ -302,15 +314,11 @@
       </div>
       <hr>
 
-      <button class="btn btn-success" type="button" (click)="sentOrderForm()">
+      <button class="btn btn-success" type="button" (click)="sentOrderForm()" *ngIf="!userService.user.position==0">
         Apply
       </button>
-      <button class="btn btn-success " type="button" (click)="sentTest()">
+      <button class="btn btn-success " type="button" (click)="sentTest()" *ngIf="!userService.user.position==0">
         SentTest
-      </button>
-
-       <button class="btn btn-success " type="button" (click)="sentEmail()">
-        SentTestEmail
       </button>
 
     </div>
@@ -329,7 +337,7 @@
         <div class="input-group">
           <span class="input-group-addon"><span class="glyphicon glyphicon-shopping-cart"></span> Tariff</span>
           <div class="dropdown" style="width: 74%;">
-            <select class="form-control boldC">
+            <select class="form-control boldC" [(ngModel)]="timeModel.paymentDetailsForm.tariff" [ngModelOptions]="{standalone: true}">
               <option *ngFor="let item of tariffs" (click)="selectTariff(item)">
                 {{item.name}}
               </option>
@@ -345,7 +353,7 @@
         <div class="input-group" style="padding-left: 21.5%;z-index: 1000;">
           <span class="input-group-addon"><span class="glyphicon glyphicon-credit-card"></span> Payment method</span>
           <div class="dropdown" style="width: 60%;">
-            <select class="form-control boldC">
+            <select class="form-control boldC"  [(ngModel)]="timeModel.paymentDetailsForm.paymentMethod" [ngModelOptions]="{standalone: true}">
               <option *ngFor="let item of paymentMethods" (click)="selectPaymentMethod(item)" >
                 {{item.name}}
               </option>
@@ -362,7 +370,7 @@
         <div class="input-group m_4">
           <span class="input-group-addon"><span class="glyphicon glyphicon-shopping-cart"></span> Trucks</span>
           <div class="dropdown">
-            <select class="form-control boldC p_25">
+            <select class="form-control boldC p_25" [(ngModel)]="timeModel.paymentDetailsForm.truck" [ngModelOptions]="{standalone: true}">
               <option *ngFor="let item of trucks" (click)="selectTruck(item)">
                 {{item.name}}
               </option>
@@ -391,7 +399,7 @@
         <div class="input-group m_4 w_158">
           <span class="input-group-addon"><span class="glyphicon glyphicon-resize-small"></span> Shrink</span>
           <div class="dropdown" style="width: 41%;">
-            <select id="packingMaterials" class="form-control boldC p_25">
+            <select id="packingMaterials" class="form-control boldC p_25" [(ngModel)]="timeModel.paymentDetailsForm.shrink" [ngModelOptions]="{standalone: true}">
               <option *ngFor="let item of shrinks" (click)="selectShrink(item)">
                 {{item.name}}
               </option>
@@ -403,7 +411,7 @@
         <div class="input-group m_4 w_158">
           <span class="input-group-addon" style="width: 32%;"><span class="glyphicon glyphicon-tag"></span> Tape</span>
           <div class="dropdown" style="width: 41%;">
-            <select id="packingMaterials" class="form-control boldC p_25">
+            <select id="packingMaterials" class="form-control boldC p_25" [(ngModel)]="timeModel.paymentDetailsForm.tape" [ngModelOptions]="{standalone: true}">
               <option *ngFor="let item of tapes" (click)="selectTape(item)">
                 {{item.name}}
               </option>
@@ -430,6 +438,7 @@
           <input style="width: 45%;"
                  type="text"
                  class="form-control boldC"
+                 [(ngModel)]="timeModel.paymentDetailsForm.ddt" [ngModelOptions]="{standalone: true}"
                  placeholder="Miles"
           />
         </div>
@@ -452,15 +461,15 @@
                  type="text"
                  id="discount"
                  class="form-control"
-                 placeholder="0.00%"
                  [(ngModel)]="discountValue"
                  [ngModelOptions]="{standalone: true}"
+                 placeholder="0.00%"
           />
           <span class="input-group-addon">
              <input type="checkbox"
                     style="width: 20px;height: 20px;;"
                     name="vehicle"
-                    id="vehicle"
+                    [value]="discountValue"
                     value="Bike" (change)="toggleDiscount()"/>
           </span>
 
@@ -469,7 +478,7 @@
         <div class="input-group m_4" style="width: 160%;">
           <span class="input-group-addon"><span class="glyphicon glyphicon-folder-close"></span> Total hours</span>
           <div class="dropdown" style="width: 70%;">
-            <select id="packingMaterials" class="form-control boldC" style="padding-left: 25%;">
+            <select id="packingMaterials" class="form-control boldC" style="padding-left: 25%;" [(ngModel)]="timeModel.paymentDetailsForm.totalHour" [ngModelOptions]="{standalone: true}">
               <option *ngFor="let item of totalHours" (click)="selectTotalForFirst(item)">
                 {{item.name}}
               </option>
@@ -601,7 +610,7 @@
         <input type="text"
                id="discountValue"
                class="form-control right-input"
-                [value]="timeModel.paymentDetailsForm.discount|currency:'USD':true:'1.2-2'"
+               [value]="timeModel.paymentDetailsForm.discount|currency:'USD':true:'1.2-2'"
                placeholder="0.00"
                pInputText
         />
@@ -661,7 +670,7 @@
       <div class="input-group ">
         <span class="input-group-addon"><span class="glyphicon glyphicon-tasks"></span> Status(color of order)</span>
         <div class="dropdown ">
-          <select id="packingMaterials" class="form-control boldC p_25">
+          <select id="packingMaterials" class="form-control boldC p_25" [(ngModel)]="timeModel.paymentDetailsForm.status" [ngModelOptions]="{standalone: true}">
             <option *ngFor="let item of status" (click)="selectStatus(item)">
               {{item.name}}
             </option>
@@ -669,11 +678,19 @@
         </div>
       </div>
 
-      <div class="input-group m_4">
-        <span class="input-group-addon" style="width: 62%;"><span class="glyphicon glyphicon-envelope"></span> E-mail</span>
+      <div class="input-group m_4" *ngIf="userService.user.position == 0">
+        <span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span> E-mail</span>
+        <div class="dropdown">
+          <select #mailSelect class="form-control">
+            <option value="Prices">Prices</option>
+            <option value="Order">Order</option>
+          </select>
+        </div>
+        <span class="input-group-addon" style="font-weight: bolder;cursor: pointer;" (click)="sentMessage(mailSelect.selectedIndex)">
+          <span style="font-weight: 600">Sent </span><span class="glyphicon glyphicon-send"></span>
+        </span>
 
-
-        <p-splitButton  label="Save" icon="fa-check" (onClick)="save()">
+        <!--<p-splitButton  label="Sent" icon="fa-check" (onClick)="sent()">
           <p-splitButtonItem icon="fa-close"
                              label="email1"
                              (onClick)="openTemp1()">
@@ -683,20 +700,21 @@
                              (onClick)="openTemp2()">
           </p-splitButtonItem>
         </p-splitButton>
+        -->
 
       </div>
 
       <div class="input-group m_4">
         <span class="input-group-addon" style="width: 62%;"><span class="glyphicon glyphicon-star-empty"></span> Follow-up</span>
 
-        <p-splitButton label="Save" icon="fa-check" (onClick)="save()">
-          <p-splitButtonItem icon="fa-close"
-                             label="Date1"
-                             (onClick)="choosedate()"></p-splitButtonItem>
-          <p-splitButtonItem icon="fa-refresh" label="Date2"
-                             (onClick)="choosedate2()"></p-splitButtonItem>
-
-        </p-splitButton>
+        <p-calendar dateFormat="yy-mm-dd"
+                    formControlName="followUp"
+                    placeholder="Move date"
+                    [showIcon]="true"
+                    #val
+                    (onSelect)="selectFollowUp()"
+                    [monthNavigator]="true"
+                    [yearNavigator]="true"></p-calendar>
       </div>
     </div>
 

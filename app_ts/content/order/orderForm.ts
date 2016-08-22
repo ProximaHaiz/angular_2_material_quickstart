@@ -32,4 +32,5 @@ export class OrderForm{
     // loadingAddress:string;
     // unLoadingAddress:string;
     tariff:string;
+    followUpDate: string;
 }

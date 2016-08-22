@@ -12,6 +12,9 @@ import {
      FormGroup, REACTIVE_FORM_DIRECTIVES
 } from '@angular/forms';
 import { OrderService } from '../../service/order.service';
+import {EventService} from "../../service/calendar.service";
+import {OrderStatusString} from "../../schedule/utils/order-status-string";
+import {OrderCountStatus} from "../order/interfaces/order-count-status";
 
 
 
@@ -22,38 +25,85 @@ import { OrderService } from '../../service/order.service';
                  Button, CodeHighlighter,SplitButton,
                  SplitButtonItem,MultiSelect,UIChart, ROUTER_DIRECTIVES,
                  REACTIVE_FORM_DIRECTIVES],
-    providers: [HTTP_PROVIDERS,OrderService],
+    providers: [HTTP_PROVIDERS,OrderService, EventService],
 })
 
-export class DashboardComponent  {
+export class DashboardComponent  implements OnInit{
    
         data: any;
         options: any;
+    private orderStatusString:OrderStatusString;
+    private orderCountStatus:OrderCountStatus;
+
+    private COMPLETED:string ='Completed';
+    private BOOKED:string = 'Booked';
+    private IN_PROGRESS = 'In progress';
+    private SOLD:string= 'Sold';
+    private LOST:string= 'Lost';
+
 //booked - забронировано
-    constructor() {
+    constructor(private _eventService:EventService) {
+        this.initOrderByStatusString();
+
+        this.orderCountStatus = new OrderCountStatus();
+        this.orderStatusString.completed = this.COMPLETED;
+        this.orderStatusString.booked = this.BOOKED;
+        this.orderStatusString.inProgress = this.IN_PROGRESS;
+        this.orderStatusString.sold = this.SOLD;
+      //  this.orderStatusString.lost = this.LOST;
+
+
+        this._eventService.getEventsByOrderStatus(this.orderStatusString)
+            .subscribe(
+                events=>{
+                    this.orderCountStatus = events.countByStatus; // get number of orders by orderStatus
+                    console.log(events.countByStatus);
+                    this.setChartsData();
+                },
+                error=>console.log("Error: "+error)
+            )
+    }
+
+    private setChartsData(){
         this.data = {
-            labels: ['Active','Lost','In process','Total','booked'],
+            labels: [
+                'Completed'+this.orderCountStatus.completed+')',
+                'Lost('+this.orderCountStatus.lost+')',
+                'In process('+this.orderCountStatus.inProgress+')',
+                'Booked('+this.orderCountStatus.booked+')',
+                'Sold('+this.orderCountStatus.sold+')'
+            ],
             datasets: [
                 {
-                    data: [55, 11, 10,92,16],
+                    data: [
+                        this.orderCountStatus.completed,
+                        // 2,
+                        this.orderCountStatus.lost,
+                        // 3,
+                        this.orderCountStatus.inProgress,
+                        this.orderCountStatus.booked,
+                        this.orderCountStatus.sold
+                    ],
                     backgroundColor: [
-                        "#FF6384",
-                        "#36A2EB",
-                        "#FFCE56",
-                        "#0B2F3A",
-                        "#8A0808"
+                        "#07B6F1",
+                        "#8A0808",
+                        "#F1E907",
+                        "#4DC93D",
+                        "#232A22"
                     ],
                     hoverBackgroundColor: [
-                        "#FF6384",
-                        "#36A2EB",
-                        "#FFCE56",
-                        "#0B2F3A",
-                        "#8A0808"
+                        "#07B6F1",
+                        "#8A0808",
+                        "#F1E907",
+                        "#4DC93D",
+                        "#232A22"
                     ]
-                }]    
-            };
+                }]
+        };
+    };
 
-              this.options = {
+    ngOnInit(){
+        this.options = {
             title: {
                 display: true,
                 text: 'My Title',
@@ -66,7 +116,17 @@ export class DashboardComponent  {
                 enabled:true
             }
         };
+     this.setChartsData();
     }
 
+    private initOrderByStatusString() {
+        this.orderStatusString = {
+            booked: '',
+            completed: '',
+            sold: '',
+            inProgress: '',
+            lost: ''
+        }
 
+    }
 }

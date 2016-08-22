@@ -3,5 +3,5 @@ export interface OrderStatusString{
     completed:string;
     inProgress:string;
     sold:string;
-   
+    lost: string;
 }

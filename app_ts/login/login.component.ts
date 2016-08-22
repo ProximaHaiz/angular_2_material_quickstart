@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {ROUTER_DIRECTIVES} from '@angular/router';
+import {ROUTER_DIRECTIVES, Router} from '@angular/router';
 import {
      FormBuilder,
      Validators,
@@ -22,8 +22,7 @@ import {InputText} from 'primeng/primeng';
         TestComponent,
         REACTIVE_FORM_DIRECTIVES,
         InputText]
-    }
-)
+})
  export class LoginFormComponent implements OnInit{
         public loginForm: FormGroup ;
         private pageTitle: string;
@@ -36,15 +35,22 @@ import {InputText} from 'primeng/primeng';
         private formError: { [id: string]: string };
         private _validationMessages: { [id: string]: { [id: string]: string } };
 
-           ngOnInit(){
-                console.log('Login OnInit');     
-            }
 
         constructor(private _fb: FormBuilder,
                     private _contactService:UserServiceComponent,
-                    private _dataHandlerService: DataHandlerService){
-            console.log('Login constructor');  
-             this.newContact = new ContactComponent();
+                    private _dataHandlerService: DataHandlerService,
+                    private router: Router){
+
+            if(this._contactService.user.position == 0)
+                this.router.navigate(['/content']);
+            else if(this._contactService.user.position == 1)
+                this.router.navigate(['/content/orderList']);
+            else if(this._contactService.user.position == 2)
+                this.router.navigate(['/adminPage'])
+            else if(this._contactService.user.position == 3)
+                this.router.navigate(['/content']);
+
+            this.newContact = new ContactComponent();
             this.loginForm = this._fb.group({
             'username': new FormControl(this.newContact.username,Validators.compose([Validators.required, Validators.minLength(4)])),
             'password': new FormControl(this.newContact.password,
@@ -107,5 +113,10 @@ import {InputText} from 'primeng/primeng';
             this.loginError = error;
             console.log('login error: '+error)
         });
-    }   
+    }
+
+    public ngOnInit(){
+        //Operator
+       
+    }
 }

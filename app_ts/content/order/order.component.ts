@@ -1,6 +1,6 @@
 import {Component, OnInit, ChangeDetectorRef, Input} from '@angular/core';
 import {HTTP_PROVIDERS}    from '@angular/http';
-import {ROUTER_DIRECTIVES} from '@angular/router';
+import {ROUTER_DIRECTIVES, Router, ActivatedRoute} from '@angular/router';
 import {
   Schedule, Button, InputText, Calendar, Dialog, Checkbox, TabPanel, TabView,
   CodeHighlighter, Dropdown, SplitButton, SplitButtonItem, MultiSelect, InputSwitch, Growl, InputMask, SelectItem,Accordion,AccordionTab
@@ -46,6 +46,8 @@ import { SearchDistance } from './utils/search-distance';
 import {MoversType,PaymentMethodType,TariffType,RatePerHourType,
   PackageMaterialType,ShrinkType, TapeType,CompanyType,AdvertisementType,
 SizeOfMoveType, TruckType, PriceCategoryType} from './enums/all-enums';
+import {UserServiceComponent} from "../../service/user.service";
+import {Control} from "@angular/common";
 // import { CompanyType1 } from './advertisement-type'
 //TODO: Попрорбовать еще раз enum в другом классе!
 
@@ -139,6 +141,7 @@ export class OrderComponent implements OnInit {
           console.log('heavyItemPrice:'+this.timeModel.paymentDetailsForm.heavyItemPrice)
   } 
 
+
   changeMultiSelect(item:any){
     console.log('Changed!'+this.selectedheavyItems);
     this.changePriceOfHeavyItem(this.selectedheavyItems);
@@ -148,67 +151,77 @@ export class OrderComponent implements OnInit {
   constructor(private _fb:FormBuilder,
               private _orderService:OrderService,
               private _selectorsService:SelectorsService,
-              private _googleApiService: GoogleApiService) {
-    this.timeModel = new OrderModel();
-     this.heavyItems = [];
-        this.heavyItems.push({label: 'Grand piano', value: 'Grand piano'});
-        this.heavyItems.push({label: 'Full table', value: 'Full table'});
-        this.heavyItems.push({label: 'Gun safe', value: 'Gun safe'});
-        this.heavyItems.push({label: 'Baby grand piano', value:'Baby grand piano'});
-        this.heavyItems.push({label: 'Upright piano', value: 'Upright piano'});
-        this.heavyItems.push({label: 'Jacuzzi', value: 'Jacuzzi'});
-       
-    this.orderForm = this._fb.group({
-
-      // 'client': _fb.group({
-      //     name: [this.timeModel.client.fullName, Validators.required],
-      //     email: new FormControl(this.timeModel.client.mail,Validators.required),
-      //     phone: new FormControl(this.timeModel.client.phone,Validators.required),
-
-      // }),
-      // 'name': new FormControl(this.timeModel.client.fullName,Validators.required),
-      // 'email': new FormControl(this.timeModel.client.mail,Validators.required),
-      // 'phone': new FormControl(this.timeModel.client.phone,Validators.required),
-
-      'fullName': new FormControl(this.timeModel.orderForm.fullName, Validators.required),
-      'mail': new FormControl(this.timeModel.orderForm.mail, Validators.required),
-      'phoneNumber': new FormControl(this.timeModel.orderForm.phoneNumber, Validators.required),
-      // 'client':this._fb.array([
-      //     this.initClientInfo(),
-      // ]),
-      'loadingAddress': this._fb.array([
-        this.initAddressFrom(),
-      ]),
-      'unLoadingAddress': this._fb.array([
-        this.initAddressTo(),
-      ]),
-
- 
-      'addressTo': new FormControl('', Validators.required),
-      'zipTo': new FormControl(this.timeModel.orderForm.zipTo, Validators.required),
-
-      'moveDate': new FormControl(this.timeModel.orderForm.moveDate, Validators.required),
-      'startTime': new FormControl(this.timeModel.orderForm.moveDateTime, Validators.required),
-
-      'packageDate': new FormControl(this.timeModel.orderForm.packingDate, Validators.required),
-      'packingStartTime': new FormControl(this.timeModel.orderForm.packingDateTime, Validators.required),
-
-      'estimateDate': new FormControl(this.timeModel.orderForm.estimateDate, Validators.required),
-      'estimateStartTime': new FormControl(this.timeModel.orderForm.estimateDateTime, Validators.required),
-      'estimateEndTime': new FormControl('', Validators.required),
-
-      'isLabor': new FormControl(this.timeModel.orderForm.isLabor, Validators.required),
-      'storageDate': new FormControl(this.timeModel.paymentDetailsForm.storageDate, Validators.required),
-
-      //Payment-details Form:
-
-      'selectCompany': new FormControl('', Validators.required),
-      'forsalesComment': new FormControl('', Validators.required),
-      'forManagerComment': new FormControl('', Validators.required),
-  
+              private _googleApiService: GoogleApiService,
+              public userService: UserServiceComponent,
+              private route: ActivatedRoute) {
+      this.timeModel = new OrderModel();
 
 
-    });
+        this.heavyItems = [
+            {label: 'Grand piano', value: 'Grand piano'},
+            {label: 'Full table', value: 'Full table'},
+            {label: 'Gun safe', value: 'Gun safe'},
+            {label: 'Baby grand piano', value:'Baby grand piano'},
+            {label: 'Upright piano', value: 'Upright piano'},
+            {label: 'Jacuzzi', value: 'Jacuzzi'}
+        ];
+
+          this.initDefaultData();
+
+          this.orderForm = this._fb.group({
+
+              // 'client': _fb.group({
+              //     name: [this.timeModel.client.fullName, Validators.required],
+              //     email: new FormControl(this.timeModel.client.mail,Validators.required),
+              //     phone: new FormControl(this.timeModel.client.phone,Validators.required),
+
+              // }),
+              // 'name': new FormControl(this.timeModel.client.fullName,Validators.required),
+              // 'email': new FormControl(this.timeModel.client.mail,Validators.required),
+              // 'phone': new FormControl(this.timeModel.client.phone,Validators.required),
+
+              'fullName': new FormControl(this.timeModel.orderForm.fullName, Validators.required),
+              'mail': new FormControl(this.timeModel.orderForm.mail, Validators.required),
+              'phoneNumber': new FormControl(this.timeModel.orderForm.phoneNumber, Validators.required),
+              // 'client':this._fb.array([
+              //     this.initClientInfo(),
+              // ]),
+              'loadingAddress': this._fb.array([
+                  this.initAddressFrom(),
+              ]),
+              'unLoadingAddress': this._fb.array([
+                  this.initAddressTo(),
+              ]),
+
+
+              'addressTo': new FormControl('', Validators.required),
+              'zipTo': new FormControl('', Validators.required),
+
+
+
+              'moveDate': new FormControl(this.timeModel.orderForm.moveDate, Validators.required),
+              'startTime': new FormControl(this.timeModel.orderForm.moveDateTime, Validators.required),
+
+              'packageDate': new FormControl(this.timeModel.orderForm.packingDate, Validators.required),
+              'packingStartTime': new FormControl(this.timeModel.orderForm.packingDateTime, Validators.required),
+
+              'estimateDate': new FormControl(this.timeModel.orderForm.estimateDate, Validators.required),
+              'estimateStartTime': new FormControl(this.timeModel.orderForm.estimateDateTime, Validators.required),
+              'estimateEndTime': new FormControl('', Validators.required),
+
+              'isLabor': new FormControl(this.timeModel.orderForm.isLabor, Validators.required),
+              'storageDate': new FormControl(this.timeModel.paymentDetailsForm.storageDate, Validators.required),
+
+              //Payment-details Form:
+
+              'selectCompany': new FormControl('', Validators.required),
+              'forsalesComment': new FormControl('', Validators.required),
+              'forManagerComment': new FormControl('', Validators.required),
+
+              'followUp': new FormControl('', Validators.required),
+              
+
+          });
   }
 
   initAddressFrom() {
@@ -328,18 +341,6 @@ export class OrderComponent implements OnInit {
     this.timeModel.orderForm.estimateDateTime = this.timeEstimate;
   }
 
-  sentEmail(){
-    console.log('mail = '+this.orderForm.controls['mail'].value);
-    this._orderService.sentMail(this.orderForm.controls['mail'].value).subscribe(
-        data => {
-          console.log('Email sent')
-        },
-        error => {
-          console.log('Error: sentOrderForm ' + error)
-        });
-
-  }
-
   private createTestEntityes(){
     //fill orderFrom
     this.timeModel.orderForm.advertisement='advertisement';
@@ -354,7 +355,7 @@ export class OrderComponent implements OnInit {
           this.timeModel.orderForm.unloadingAddress=[
             {address:'testAddressTo1',zip:1111,floor:1},
             {address:'testAddressTo2',zip:2222,floor:2}]
-          this.timeModel.orderForm.mail='froade.nov@gmail.com';
+          this.timeModel.orderForm.mail='textmesweet@gmail.com';
           this.timeModel.orderForm.moveDate='2016-08-08';
           this.timeModel.orderForm.moveDateTime='03:00-04:00 a.m.';
               this.timeModel.orderForm.packingDate='2016-08-08';
@@ -405,6 +406,10 @@ export class OrderComponent implements OnInit {
     this.changeMoverPrice();//меняет цены в зависиости от выбраной компании
 
   }
+    selectFollowUp(item:string) {
+        this.timeModel.orderForm.followUpDate = this.orderForm.controls['followUp'].value;
+        console.log('Select date:' + this.timeModel.orderForm.followUpDate)
+    }
 
   selectPackMaterial(item:any) {
     console.log('packingMaterial:' + item)
@@ -667,16 +672,28 @@ private changeCategoryPrice(){
 
   sentFullForm(){
         console.log('SentFullForm');
-    this.createOrderFormEntity();
-    this.createPaymentDetailsFormEntity();
+      if(this.userService.user.position == 0){
+          this.createOrderFormEntity();
+          this.createPaymentDetailsFormEntity();
+          let urldAdd: string = 'emailOrder';
+          let data = JSON.stringify( this.timeModel );
+          this._orderService.sentMessage(urldAdd,data).subscribe(
+              data=>{ console.log('Message sent!');},
+              error=> console.log('Error in sending order message')
+          );
+      }
+      else{
+          this.createOrderFormEntity();
+          this.createPaymentDetailsFormEntity();
 
-    this._orderService.saveOrder(this.timeModel)
-      .subscribe(
-        data => {
-        },
-        error => {
-          console.log('error:sentFullForm '+ error)
-        });
+          this._orderService.saveOrder(this.timeModel)
+              .subscribe(
+                  data => {
+                  },
+                  error => {
+                      console.log('error:sentFullForm '+ error)
+                  });
+      }
   }
   sentTest(){
     console.log('SentTest');
@@ -780,8 +797,198 @@ getDistance(){
         });     
 }
 
+    private sub: any;
+
+    private orderForSent:any;
+
+    private getOrderData(data: any){
+
+
+        (<Control>this.orderForm.controls['fullName']).updateValue( data.client.fullName );
+
+        (<Control>this.orderForm.controls['mail']).updateValue( data.client.mail);
+        
+        (<Control>this.orderForm.controls['phoneNumber']).updateValue( data.client.phone);
+        this.timeModel.orderForm.company = data.company;
+
+        this.timeModel.orderForm.sizeOfMove = data.sizeOfMove;
+        this.timeModel.orderForm.advertisement = data.advertisement;
+
+
+
+
+       /*// this.timeModel.paymentDetailsForm.tariff = 'Standart';
+        this.timeModel.paymentDetailsForm.paymentMethod = data.paymentMethod;
+        this.timeModel.paymentDetailsForm.truck = data.truck;
+        this.timeModel.paymentDetailsForm.movers = data.movers;
+        this.timeModel.paymentDetailsForm.packingMaterial = 'Extra';
+        this.timeModel.paymentDetailsForm.shrink = data.shrink;
+        this.timeModel.paymentDetailsForm.tape = data.tape;
+        this.timeModel.paymentDetailsForm.totalHour= data.totalHour;
+        this.timeModel.paymentDetailsForm.status = data.status;
+
+
+        this.paymentPrice.totalHourPrice = data.totalPrice;
+
+       this.timeModel.orderForm.loadingAddress = data.loadingAdress;
+       // this.timeModel.orderForm.unloadingAddress = this.orderForm.controls['unLoadingAddress'].value;
+        this.timeModel.orderForm.unloadingAddress = data.unloadingAddress;
+
+
+        this.timeModel.paymentDetailsForm.ddt = data.ddt;
+        this.timeModel.paymentDetailsForm.heavyItemPrice = data.heavyItemPrice;
+
+        this.timeModel.orderForm.moveDate = data.moveDate;
+        this.moveDate = data.moveDate;
+
+*/
+
+        //(<Control>this.orderForm.controls['loadingAddress']).updateValue(data.loadingAddress[0].address);
+      //  (<Control>this.orderForm.controls['loadingAddress']).controls[0].updateValue('Address 1');
+
+        const controlFrom = <FormArray>this.orderForm.controls['loadingAddress'];
+        controlFrom.removeAt(0);
+        for(let i=0;i<data.loadingAddress.length;i++){
+            controlFrom.push(this._fb.group({
+                address: [ data.loadingAddress[i].address, Validators.required],
+                zip: [data.loadingAddress[i].zip]
+            }));
+        }
+
+
+        const controlTo = <FormArray>this.orderForm.controls['unLoadingAddress'];
+        controlTo.removeAt(0);
+
+        for(let i=0;i<data.unloadingAddress.length;i++){
+            console.log(data.unloadingAddress[i].address);
+            controlTo.push(this._fb.group({
+                address: [ data.unloadingAddress[i].address, Validators.required],
+                zip: [data.unloadingAddress[i].zip]
+            }));
+        }
+
+
+        if(data.moveDate != undefined){
+            (<Control>this.orderForm.controls['moveDate']).updateValue(data.moveDate);
+            this.timeMove  = data.moveDateTime;
+        }
+
+        if(data.packageDate != undefined){
+            console.log('null');
+            (<Control>this.orderForm.controls['packageDate']).updateValue(data.packageDate);
+            this.timePackage = data.packageDate;
+        }else this.timePackage = '03:00-04:00 p.m.';
+
+
+        (<Control>this.orderForm.controls['estimateDate']).updateValue(data.estimateDate);
+        this.timeEstimate = data.estimateDateTime;
+
+        if(data.tariff != undefined){
+            this.timeModel.orderForm.tariff = data.tariff;
+        }
+        this.timeModel.paymentDetailsForm.paymentMethod  = data.paymentMethod;
+        this.timeModel.paymentDetailsForm.truck = data.truck;
+
+        this.timeModel.paymentDetailsForm.shrink = data.shrink;
+        this.timeModel.paymentDetailsForm.tape = data.tape;
+
+        this.timeModel.paymentDetailsForm.ddt = data.ddt;
+        this.timeModel.paymentDetailsForm.discount = data.discount;
+        if(data.discount != null) this.discountValue = '10.00%';
+        this.timeModel.paymentDetailsForm.totalHour = data.totalHour;
+
+        if(data.storageDate != null){
+            (<Control>this.orderForm.controls['storageDate']).updateValue(data.storageDate);
+        }
+        
+        this.timeModel.paymentDetailsForm.status = data.status;
+
+
+        this.orderForSent = data;
+
+        /*this.orderForm = this._fb.group({
+
+
+            'fullName': new FormControl(data.client.fullName, Validators.required),
+            'mail': new FormControl(data.client.mail, Validators.required),
+            'phoneNumber': new FormControl(data.client.phone, Validators.required),
+            // 'client':this._fb.array([
+            //     this.initClientInfo(),
+            // ]),
+            'loadingAddress': this._fb.array([
+            this._fb.group({
+                address: [data.loadingAddress[0].address, Validators.required],
+                zip: ['']
+            })
+        ]),
+            'unLoadingAddress': this._fb.array([
+            this.initAddressTo(),
+        ]),
+
+
+            'addressTo': new FormControl('', Validators.required),
+            'zipTo': new FormControl(this.timeModel.orderForm.zipTo, Validators.required),
+
+            'moveDate': new FormControl(this.timeModel.orderForm.moveDate, Validators.required),
+            'startTime': new FormControl(this.timeModel.orderForm.moveDateTime, Validators.required),
+
+            'packageDate': new FormControl(data.packingDate, Validators.required),
+            'packingStartTime': new FormControl(this.timeModel.orderForm.packingDateTime, Validators.required),
+
+            'estimateDate': new FormControl(data.estimateDate, Validators.required),
+            'estimateStartTime': new FormControl(this.timeModel.orderForm.estimateDateTime, Validators.required),
+            'estimateEndTime': new FormControl('', Validators.required),
+
+            'isLabor': new FormControl(this.timeModel.orderForm.isLabor, Validators.required),
+            'storageDate': new FormControl(this.timeModel.paymentDetailsForm.storageDate, Validators.required),
+
+            //Payment-details Form:
+
+            'selectCompany': new FormControl('', Validators.required),
+            'forsalesComment': new FormControl('', Validators.required),
+            'forManagerComment': new FormControl('', Validators.required),
+
+
+
+    });
+   */
+
+
+
+
+        // this.timeModel.orderForm.moveDate = this.orderForm.controls['moveDate'].value;
+       // this.timeModel.orderForm.moveDateTime = this.orderForm.controls['startTime'].value;
+       // this.timeModel.orderForm.packingDate = this.orderForm.controls['packageDate'].value;
+       //  this.timeModel.orderForm.estimateDate = data.estimateDate;
+       // this.timeModel.orderForm.packingDateTime = this.orderForm.controls['packingStartTime'].value;
+       // this.timeModel.orderForm.estimateDate = this.orderForm.controls['estimateDate'].value;
+        //this.timeModel.orderForm.estimateDateTime = this.orderForm.controls['estimateStartTime'].value;
+       // this.timeModel.orderForm.storageDate = this.orderForm.controls['storageDate'].value;
+
+
+        //Dates into top form
+       // this.timeModel.orderForm.moveDateTime = this.timeMove;
+       // this.timeModel.orderForm.packingDateTime = this.timePackage;
+       // this.timeModel.orderForm.estimateDateTime = this.timeEstimate;
+
+    };
 
   ngOnInit() {
+          if(this.userService.user.position!=4){
+              if(this.userService.user.position == 0){
+                  this.sub = this.route.params.subscribe(params =>{
+                      let id = +params['id'];
+                      if(id==NaN) console.log('ID IS NAN!!!');
+                      console.log("id="+id)
+                      this._orderService.getOrder(id).subscribe((data)=>{
+                          console.log(data);
+                          this.getOrderData(data);
+                      },(eror)=> console.log('Error: '+eror));
+                  })
+              }
+          }
+
+
     this.title = '<h2>title</h2>';
     this.orderCountStatus= new OrderCountStatus();
     this.getOrderCountStatus();
@@ -826,7 +1033,9 @@ getDistance(){
       .subscribe(
         data => {this.orderCountStatus = data;
           console.log('orderCountStatus:'+this.orderCountStatus.booked)},
-        error =>{})
+        error =>{
+            console.log(error);
+        })
   }
 
  
@@ -1137,7 +1346,113 @@ getDistance(){
     }, {
       type: StatusType.SOLD,
       name: 'Sold'
+    },{
+        type: StatusType.LOST,
+        name: 'Lost'
     }]
   }
+
+    private initDefaultData() {
+        this.timeModel.orderForm.sizeOfMove = 'Commercial';
+        this.timeModel.orderForm.fullName = '';
+        this.timeModel.orderForm.advertisement = 'Google Ads';
+        this.timeModel.paymentDetailsForm.tariff = 'Standart';
+        this.timeModel.paymentDetailsForm.paymentMethod = 'Cash';
+        this.timeModel.paymentDetailsForm.truck = 1;
+        this.timeModel.paymentDetailsForm.movers = 2;
+        this.timeModel.paymentDetailsForm.rateType = 'Rate per hour';
+        this.timeModel.paymentDetailsForm.packingMaterial = 'Extra';
+        this.timeModel.paymentDetailsForm.shrink = 1;
+        this.timeModel.paymentDetailsForm.tape = 1;
+        this.timeModel.paymentDetailsForm.totalHour= 3;
+        this.timeModel.paymentDetailsForm.status = 'Booked';
+    }
+    
+    private sentMessage(index:number){
+        this.createOrderFormEntity();
+        //Prices
+        if(index == 0){
+
+           let object = {
+                fullName: this.timeModel.orderForm.fullName,
+                mail:     this.timeModel.orderForm.mail,
+                phone:    this.timeModel.orderForm.phoneNumber,
+                company:  this.timeModel.orderForm.company
+            };
+
+           
+            console.log(JSON.stringify(object));
+
+            let urlAdd: string = 'emailPrice';
+            this._orderService.sentMessage(urlAdd,JSON.stringify(object)).subscribe(
+                data=>{ console.log('Message sent!');},
+                error=> console.log('Error in sending prices message')
+            );   
+        }else {
+            this.createOrderFormEntity();
+            this.createPaymentDetailsFormEntity();
+
+           /* this.orderForSent.client.fullName = this.timeModel.orderForm.fullName;
+            this.orderForSent.client.mail = this.timeModel.orderForm.mail;
+            this.orderForSent.client.phone = this.timeModel.orderForm.phoneNumber;
+            this.orderForSent.company = this.timeModel.orderForm.company;
+            this.orderForSent.sizeOfMove = this.timeModel.orderForm.sizeOfMove;
+            this.orderForSent.loadingAddress = this.timeModel.orderForm.loadingAddress;
+            this.orderForSent.unloadingAddress = this.timeModel.orderForm.unloadingAddress;
+            this.orderForSent.advertisement = this.timeModel.orderForm.advertisement;
+
+            if(this.timeModel.orderForm.moveDate != undefined){
+                this.orderForSent.moveDate = this.timeModel.orderForm.moveDate;
+                this.orderForSent.moveDateTime = this.timeModel.orderForm.moveDateTime;
+            }
+
+            if(this.timeModel.orderForm.packingDate != undefined){
+                this.orderForSent.packageDate = this.timeModel.orderForm.packingDate;
+                this.orderForSent.packageDateTime = this.timeModel.orderForm.packingDateTime;
+            }
+
+            if(this.timeModel.orderForm.estimateDate != undefined){
+                this.orderForSent.estimateDate  = this.timeModel.orderForm.estimateDate ;
+                this.orderForSent.estimateDateTime  = this.timeModel.orderForm.estimateDateTime ;
+            }
+            */
+
+            let distance = null;
+
+            if(this.timeModel.orderForm.distance != undefined) {
+                distance = this.timeModel.orderForm.distance.replace("mi", "");
+                distance = distance.replace(" ", "");
+                console.log(distance);
+            }
+
+            if( distance != null && +distance > 10){
+                this.orderForSent.ddt = +distance;
+            }else this.orderForSent.ddt = null;
+            this.orderForSent.distance = distance;
+/*
+            this.orderForSent.tariff = this.timeModel.orderForm.tariff;
+            this.orderForSent.paymentMethod = this.timeModel.paymentDetailsForm.paymentMethod;
+            this.orderForSent.truck = this.timeModel.paymentDetailsForm.truck;
+            this.orderForSent.movers = this.timeModel.paymentDetailsForm.movers;
+            this.orderForSent.shrink = this.timeModel.paymentDetailsForm.shrink;
+            this.orderForSent.tape = this.timeModel.paymentDetailsForm.tape;
+            this.orderForSent.discount = this.timeModel.paymentDetailsForm.discount;
+            this.orderForSent.totalHour = this.timeModel.paymentDetailsForm.totalHour;
+            this.orderForSent.status = this.timeModel.paymentDetailsForm.status;
+
+
+            */
+            console.log(this.timeModel);
+
+            let urldAdd: string = 'emailOrder';
+            let data = JSON.stringify( this.timeModel );
+            this._orderService.sentMessage(urldAdd,data).subscribe(
+                data=>{ console.log('Message sent!');},
+                error=> console.log('Error in sending order message')
+            );
+
+
+        }
+    };
 }
 
