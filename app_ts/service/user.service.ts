@@ -62,15 +62,15 @@ export class UserServiceComponent extends AbstractService{
           console.log('User: '+this.user.username);
           console.log('Position: '+this.user.position);
 
-            const loginUrl = API_URL+'login';
-            let headers = new Headers({ 'Content-Type': 'application/json' });
-            let options = new RequestOptions({ headers: headers });
-            console.log('User send name:'+ user.username);
-            console.log('User send pass:'+ user.password);
-            // console.log('User send conf-pass:'+ user.reset_password);
-            return this._http.post(loginUrl,JSON.stringify(user),options)
-            .map(res => res.json())
-            .catch(this._handleError);
+            // const loginUrl = API_URL+'login';
+            // let headers = new Headers({ 'Content-Type': 'application/json' });
+            // let options = new RequestOptions({ headers: headers });
+            // console.log('User send name:'+ user.username);
+            // console.log('User send pass:'+ user.password);
+            // // console.log('User send conf-pass:'+ user.reset_password);
+            // return this._http.post(loginUrl,JSON.stringify(user),options)
+            // .map(res => res.json())
+            // .catch(this._handleError);
     }
   
   public goOut(){

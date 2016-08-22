@@ -207,10 +207,12 @@ private initOrderByStatusString(){
        this._router.navigate( ['/content/order', e.calEvent.orderId] );
      }
      else if(this.userService.user.position == 3){
-         this._router.navigate(['/content/counterManage', ]);
+         this._router.navigate(['/content/counterManager',e.calEvent.orderId ]);
      }
-     else this._router.navigate(['/content/manager', e.calEvent.orderId]);
-
+     else {
+       console.log('conterManagerNavigate, id:'+e.calEvent.orderId)
+       this._router.navigate(['/content/manager', e.calEvent.orderId]);
+     }
   }
 
   saveEvent() {

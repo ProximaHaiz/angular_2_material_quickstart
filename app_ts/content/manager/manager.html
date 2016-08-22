@@ -8,7 +8,15 @@
                     <!-- Default panel contents -->
                     <div class="panel-heading">
                         Manager board
-                        <h2 style="position: absolute;margin-top: -1.7%;margin-left: 87%;cursor: pointer;" (click)="openModal()"><span class="glyphicon glyphicon-cog"></span> <span *ngIf="newAnswers !=0" style="margin-top: -10px;" class="badge">{{newAnswers}}</span></h2>
+                        <h2 style="position: absolute;margin-top: -1.7%;margin-left: 87%;cursor: pointer;"
+                            (click)="openModal()">
+                         <span class="glyphicon glyphicon-cog">
+                         </span> 
+                         <span 
+                                *ngIf="newAnswers !=0" 
+                                style="margin-top: -10px;" 
+                                class="badge">{{newAnswers}}
+                         </span></h2>
                     </div>
 
                     <!-- Table -->
@@ -89,9 +97,9 @@
                             <td style="width: 36%">
                                 <div>
 
-                                      <div class="input-group">
-                                        <span class="input-group-addon" style="width: 42.5%;">Truck</span>
-                                        <div class="dropdown"style="width: 165%;">
+                                      <div class="input-group" style="width:93%;">
+                                        <span class="input-group-addon" style="width: 30.5%;">Truck</span>
+                                        <div class="dropdown"style="width: 100%;">  
                                             <select class="form-control" #selectTruck>
                                                 <option *ngFor="let vehicle of item.vehicles">
                                                     {{vehicle.type+' '+vehicle.vehicleRegNumber}}

@@ -18,8 +18,8 @@ import { Employee } from './interfaces/foreman';
 import { Vehicle } from './interfaces/vehicle';
 import {MessagesService} from "./messages.service";
 import {Observable} from "rxjs/Rx";
-import 'rxjs/add/observable/interval';
-import {IntervalObservable} from 'rxjs/Observable/IntervalObservable'
+// import 'rxjs/add/observable/interval';
+// import {IntervalObservable} from 'rxjs/Observable/IntervalObservable'
 
 declare var jQuery:any;
 
@@ -56,21 +56,21 @@ class SentMessage{
 
          */
 
-        let timer = Observable.interval(500).subscribe((num)=> {
-            num++;
-            if(num == 6) this.isConfirm = true;
-            else {
-                this._orderService.getOrder(69)
-                    .subscribe(
-                        categories=>{
-                            console.log(categories);
-                        },
-                        error=>console.log('Error '+ error)
-                    );
-            }
+        // let timer = Observable.interval(500).subscribe((num)=> {
+        //     num++;
+        //     if(num == 6) this.isConfirm = true;
+        //     else {
+        //         this._orderService.getOrder(69)
+        //             .subscribe(
+        //                 categories=>{
+        //                     console.log(categories);
+        //                 },
+        //                 error=>console.log('Error '+ error)
+        //             );
+        //     }
 
-            if(this.isConfirm) timer.unsubscribe();
-        });
+        //     if(this.isConfirm) timer.unsubscribe();
+        // });
 
 
     };

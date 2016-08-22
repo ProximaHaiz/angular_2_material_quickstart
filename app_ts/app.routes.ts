@@ -30,7 +30,7 @@ export const routes: RouterConfig = [
               { path: 'dashboard', component:  DashboardComponent , canActivate: [ CanActivateViaAuthGuard] },
                { path: 'email', component: EMailComponent ,         canActivate: [ CanActivateViaAuthGuard]},
               { path: 'orderList', component: OrderListComponent,   canActivate: [ CanActivateViaAuthGuard] },
-              { path: 'counterManage/:id' , component: CounterManagerComponent, canActivate: [CanActivateViaAuthGuard]}
+              { path: 'counterManager/:id' , component: CounterManagerComponent, canActivate: [CanActivateViaAuthGuard]}
              ], canActivate: [ CanActivateViaAuthGuard]  }
 ];
 
