@@ -104,15 +104,16 @@ import {InputText} from 'primeng/primeng';
     
     login(){
         console.log(this.loginForm.value);
-        this._contactService.loginUser(this.loginForm.value);
-        // .subscribe(data =>{
-        //     console.log('loginForm have been send');
-        //     this.loginError = "";
-        // },
-        // error =>{
-        //     this.loginError = error;
-        //     console.log('login error: '+error)
-        // });
+        this._contactService.loginUser(this.loginForm.value)
+        /*.subscribe(data =>{
+            console.log('loginForm have been send');
+            this.loginError = "";
+        },
+        error =>{
+            this.loginError = error;
+            console.log('login error: '+error)
+        });
+        */
     }
 
     public ngOnInit(){

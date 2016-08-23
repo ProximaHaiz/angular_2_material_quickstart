@@ -48,9 +48,9 @@ import {MoversType,PaymentMethodType,TariffType,RatePerHourType,
 SizeOfMoveType, TruckType, PriceCategoryType} from './enums/all-enums';
 import {UserServiceComponent} from "../../service/user.service";
 import {Control} from "@angular/common";
+import {GoogleplaceDirective} from "./googleplace.directive";
 // import { CompanyType1 } from './advertisement-type'
 //TODO: Попрорбовать еще раз enum в другом классе!
-
 
 @Component({
   templateUrl: 'app_ts/content/order/template/order.html',
@@ -60,7 +60,7 @@ import {Control} from "@angular/common";
     Button, CodeHighlighter, SplitButton,InputMask,
     SplitButtonItem, MultiSelect, InputSwitch, Growl,
     Accordion,AccordionTab,
-    ROUTER_DIRECTIVES,REACTIVE_FORM_DIRECTIVES],
+    ROUTER_DIRECTIVES,REACTIVE_FORM_DIRECTIVES, GoogleplaceDirective],
   providers: [HTTP_PROVIDERS, OrderService, SelectorsService, GoogleApiService],
 })
 
@@ -109,44 +109,7 @@ export class OrderComponent implements OnInit {
 
   private priceCategory:PriceCategory;
 
-  private initPaymentPrice() {
-    this.paymentPrice = new PaymentPrice();
-    this.paymentPrice.ratePerHourPrice = 0;
-    this.paymentPrice.serviceChargePrice = 30;
-    this.paymentPrice.discount = 0;
-    this.paymentPrice.heavyItemPrice = 0;
-    this.paymentPrice.packingMaterialPrice = 0;
-    this.paymentPrice.shrinkPrice = 0;
-    this.paymentPrice.sizeOfStorageSizePrice = 0;
-    this.paymentPrice.tapesPrice = 0;
-    this.paymentPrice.totalHourPrice = 0;
-    this.paymentPrice.ddtPrice = 0;
 
-  }
-
-  private changePriceOfHeavyItem(items:string []){
-          let heavyItemPrice:number = 0;
-          items.forEach(element => {
-            switch(element){
-              case 'Grand piano': heavyItemPrice += 100;
-              break;
-              case 'Full table' : heavyItemPrice += 150; break;
-              case 'Gun safe': heavyItemPrice += 100; break;
-              case 'Baby grand piano': heavyItemPrice += 100; break;
-              case 'Upright piano': heavyItemPrice += 100; break;
-              case 'Jacuzzi': heavyItemPrice += 150; break;
-            }
-          });
-          this.timeModel.paymentDetailsForm.heavyItemPrice =  heavyItemPrice;
-          console.log('heavyItemPrice:'+this.timeModel.paymentDetailsForm.heavyItemPrice)
-  } 
-
-
-  changeMultiSelect(item:any){
-    console.log('Changed!'+this.selectedheavyItems);
-    this.changePriceOfHeavyItem(this.selectedheavyItems);
-    this.changeTotalPrice();
-  }
 
   constructor(private _fb:FormBuilder,
               private _orderService:OrderService,
@@ -154,6 +117,8 @@ export class OrderComponent implements OnInit {
               private _googleApiService: GoogleApiService,
               public userService: UserServiceComponent,
               private route: ActivatedRoute) {
+      console.log('Constructor start: ');
+
       this.timeModel = new OrderModel();
 
 
@@ -168,6 +133,7 @@ export class OrderComponent implements OnInit {
 
           this.initDefaultData();
 
+      console.log('After init data ');
           this.orderForm = this._fb.group({
 
               // 'client': _fb.group({
@@ -219,9 +185,52 @@ export class OrderComponent implements OnInit {
               'forManagerComment': new FormControl('', Validators.required),
 
               'followUp': new FormControl('', Validators.required),
-              
+              'packingMaterialPrice': new FormControl(null, Validators.required),
+              'shrinkSum': new FormControl(null, Validators.required),
+              'tapeSum': new FormControl(null, Validators.required),
+              'storagePrice': new FormControl(null, Validators.required)
 
           });
+      console.log('After init data2 ');
+  }
+
+    private initPaymentPrice() {
+    this.paymentPrice = new PaymentPrice();
+    this.paymentPrice.ratePerHourPrice = 0;
+    this.paymentPrice.serviceChargePrice = 30;
+    this.paymentPrice.discount = 0;
+    this.paymentPrice.heavyItemPrice = 0;
+    this.paymentPrice.packingMaterialPrice = 0;
+    this.paymentPrice.shrinkPrice = 0;
+    this.paymentPrice.sizeOfStorageSizePrice = 0;
+    this.paymentPrice.tapesPrice = 0;
+    this.paymentPrice.totalHourPrice = 0;
+    this.paymentPrice.ddtPrice = 0;
+
+  }
+
+  private changePriceOfHeavyItem(items:string []){
+          let heavyItemPrice:number = 0;
+          items.forEach(element => {
+            switch(element){
+              case 'Grand piano': heavyItemPrice += 100;
+              break;
+              case 'Full table' : heavyItemPrice += 150; break;
+              case 'Gun safe': heavyItemPrice += 100; break;
+              case 'Baby grand piano': heavyItemPrice += 100; break;
+              case 'Upright piano': heavyItemPrice += 100; break;
+              case 'Jacuzzi': heavyItemPrice += 150; break;
+            }
+          });
+          this.timeModel.paymentDetailsForm.heavyItemPrice =  heavyItemPrice;
+          console.log('heavyItemPrice:'+this.timeModel.paymentDetailsForm.heavyItemPrice)
+  } 
+
+
+  changeMultiSelect(item:any){
+    console.log('Changed!'+this.selectedheavyItems);
+    this.changePriceOfHeavyItem(this.selectedheavyItems);
+    this.changeTotalPrice();
   }
 
   initAddressFrom() {
@@ -314,6 +323,7 @@ export class OrderComponent implements OnInit {
      //comments
      this.timeModel.paymentDetailsForm.fieldForSalesmanComments = this.orderForm.controls['forsalesComment'].value;
      this.timeModel.paymentDetailsForm.fieldForManagerComments = this.orderForm.controls['forManagerComment'].value;
+      this.timeModel.paymentDetailsForm.serviceCharge = 30;
 
   }
 
@@ -398,14 +408,6 @@ export class OrderComponent implements OnInit {
              this.timeModel.paymentDetailsForm.fieldForManagerComments='Test! Hi manager!'
              this.timeModel.paymentDetailsForm.fieldForSalesmanComments='Test! hi saleman!';
   }
-
-  selectCompany(item:any) {
-    this.selectedCompany = item;
-    console.log('selectedCompany:' + item.name)
-    this.timeModel.orderForm.company = item.name;
-    this.changeMoverPrice();//меняет цены в зависиости от выбраной компании
-
-  }
     selectFollowUp(item:string) {
         this.timeModel.orderForm.followUpDate = this.orderForm.controls['followUp'].value;
         console.log('Select date:' + this.timeModel.orderForm.followUpDate)
@@ -426,26 +428,9 @@ export class OrderComponent implements OnInit {
     this.timeModel.orderForm.sizeOfMove = item.name;
   }
 
-  selectTariff(item:any) {
-    console.log('Tariff:' + item);
-    this.timeModel.orderForm.tariff = item.name;
-  }
-
-  selectPaymentMethod(item:any) {
-    console.log('PaymentMethod:' + item.name)
-    this.timeModel.paymentDetailsForm.paymentMethod = item.name;
-  }
-
   selectTruck(item:any) {
     console.log('Truck:' + item.name);
     this.timeModel.paymentDetailsForm.truck = item.name;
-  }
-
-  selectMover(item:Movers) {
-    console.log('Movers:' + item.name);
-    this.timeModel.paymentDetailsForm.movers = item.name;
-    this.moverType = item.type;
-    this.changeMoverPrice();
   }
 
 
@@ -510,17 +495,17 @@ private changeCategoryPrice(){
   }
 }
 
-
   /*
     Метод, подсчитывающий общую стоимость
   **/
   changeTotalPrice() {
+      let oldTotalPrice = this.timeModel.paymentDetailsForm.totalPrice;
     let perHour = this.timeModel.paymentDetailsForm.totalHour == undefined ? 1 :
                   this.timeModel.paymentDetailsForm.totalHour;
 
     // this.paymentPrice.totalHourPrice =
-    let totalPrice =  this.timeModel.paymentDetailsForm.heavyItemPrice + 
-     (
+    let totalPrice =  this.timeModel.paymentDetailsForm.heavyItemPrice +
+      (
       this.paymentPrice.ddtPrice +
       this.paymentPrice.heavyItemPrice +
       this.paymentPrice.packingMaterialPrice +
@@ -528,8 +513,14 @@ private changeCategoryPrice(){
       this.paymentPrice.serviceChargePrice +
       this.paymentPrice.shrinkPrice +
       this.paymentPrice.sizeOfStorageSizePrice +
-      this.paymentPrice.tapesPrice) * perHour;
-      
+      this.paymentPrice.tapesPrice)* perHour;
+
+      if(this.orderForm.controls['packingMaterialPrice'].value!=null) totalPrice+= +this.orderForm.controls['packingMaterialPrice'].value;
+      if(this.orderForm.controls['shrinkSum'].value!=null ) totalPrice+= +this.orderForm.controls['shrinkSum'].value;
+      if(this.orderForm.controls['tapeSum'].value!=null ) totalPrice+= +this.orderForm.controls['tapeSum'].value;
+      if(this.orderForm.controls['storagePrice'].value!=null ) totalPrice+= +this.orderForm.controls['storagePrice'].value;
+      //totalPrice+= new Number(this.timeModel.paymentDetailsForm.ddtPrice);
+       console.log("ddt price: "+ +this.timeModel.paymentDetailsForm.ddtPrice);
       if(this.discountValue === '10.00%'){
           this.timeModel.paymentDetailsForm.discount = totalPrice*0.1;
           this.paymentPrice.totalHourPrice = totalPrice - this.timeModel.paymentDetailsForm.discount;
@@ -538,56 +529,28 @@ private changeCategoryPrice(){
           this.paymentPrice.totalHourPrice = totalPrice;
           this.timeModel.paymentDetailsForm.totalPrice = this.paymentPrice.totalHourPrice;
       }
-
-      console.log('TotalPrice from changeTotalPrice')
+      //console.log("price: "+this.timeModel.paymentDetailsForm.packingMaterialPrice);
+      //this.timeModel.paymentDetailsForm.totalPrice += +this.timeModel.paymentDetailsForm.packingMaterialPrice;
+      console.log('TotalPrice chnaged from:'+oldTotalPrice+' to: '+this.timeModel.paymentDetailsForm.totalPrice );
   }
 
   selectedVehiclePm(item:any){
     console.log('Vehicle selected:'+item.vehicleRegNumber)
   }
 
-  selectRateperhour(item:RatePerHours) {
-    console.log('RatePerHour:' + item.name);
-    console.log('RatePerHour:' + this.timeModel.paymentDetailsForm.ratePerHour);
-  }
-
   selectPackingMaterials(item:any) {
     console.log('PackingMaterials:' + item.name);
     this.timeModel.paymentDetailsForm.packingMaterial = item.name;
   }
-
-  selectShrink(item:any) {//shrink - Пленка
-    console.log('SelectShrink:' + item.name);
-    this.timeModel.paymentDetailsForm.shrink = item.name;
-  }
-
-  selectTape(item:any) {
-    console.log('SelectTape:' + item.name);
-    this.timeModel.paymentDetailsForm.tape = item.name;
-  }
-
   selectHeavyItem(item:any) {
     console.log('selectHeavyItem:' + item.name);
     this.timeModel.paymentDetailsForm.heavyItem = item.name;
-  }
-
-  selectSizeOfStorageUnit(item:any) {
-    console.log('SizeOfStorageUnit:' + item.name);
-    this.timeModel.paymentDetailsForm.storageSize = item.name;
   }
 
   selectTotalForFirst(item:any) {
     console.log('TotalForFirst:' + item.name);
     this.timeModel.paymentDetailsForm.totalHour = item.name;
     this.changeTotalPrice();
-  }
-
-  selectStatus(item:Status) {
-    if (item.type === StatusType.COMPLETED) {
-      console.log('status Completed selected');
-    }
-    console.log('Status:' + item.type + ', name:' + item.name);
-    this.timeModel.paymentDetailsForm.status = item.name;
   }
 
   //TODO Создать переменные для ценовых полей с двойной связью
@@ -628,14 +591,17 @@ private changeCategoryPrice(){
 
   public discountValue: string;
 
+    private discount:boolean = false;
   public toggleDiscount(){
     if(this.discountValue == undefined) {
       this.discountValue = '10.00%';
+        this.discount = true;
       this.changeTotalPrice();
     }else {
       this.discountValue = null;
       this.timeModel.paymentDetailsForm.discount = 0;
       this.changeTotalPrice();
+        this.discount = false;
    
     }
 
@@ -661,13 +627,15 @@ private changeCategoryPrice(){
     console.log('Sent: TimeMove:' + this.timeMove);
     this.createOrderFormEntity();
 
-    this._orderService.saveOrder(this.timeModel)
+      console.log(this.timeModel);
+    /*this._orderService.saveOrder(this.timeModel)
       .subscribe(
         data => {
         },
         error => {
           console.log('Error: sentOrderForm ' + error)
         });
+        */
   }
 
   sentFullForm(){
@@ -736,11 +704,15 @@ getDistance(){
            let dist:number=0;
            array.forEach(element => {
              console.log('Element.distance: '+element.distance);
-             dist = element.distance;
+             dist = element.distance.replace("mi","");
              this.timeModel.orderForm.distance += dist;
              console.log('Distance: '+this.timeModel.orderForm.distance);
               this.msgs.push({severity: 'info', summary: element.from+' => '
               +element.to, detail:'distance:'+ element.distance+', duration:'+element.duration});
+               if(element.distance.replace('mi','') <= 10) this.timeModel.paymentDetailsForm.ddtPrice = null;
+               else this.timeModel.paymentDetailsForm.ddtPrice = this.timeModel.paymentDetailsForm.totalPrice* 0.1;
+
+               this.changeTotalPrice();
            });
         console.log('Full distance:'+this.timeModel.orderForm.distance);
            
@@ -892,9 +864,18 @@ getDistance(){
         this.timeModel.paymentDetailsForm.shrink = data.shrink;
         this.timeModel.paymentDetailsForm.tape = data.tape;
 
-        this.timeModel.paymentDetailsForm.ddt = data.ddt;
+        this.timeModel.orderForm.distance = data.distance;
+        console.log(data.distance);
+        if(+data.distance > 10){
+            this.timeModel.paymentDetailsForm.ddtPrice = this.timeModel.paymentDetailsForm.totalPrice* 0.1;
+            console.log(this.timeModel.paymentDetailsForm.ddtPrice);
+        }
+        this.timeModel.paymentDetailsForm.ddtPrice = data.ddtPrice;
         this.timeModel.paymentDetailsForm.discount = data.discount;
-        if(data.discount != null) this.discountValue = '10.00%';
+        if(data.discount != null) {
+            this.discountValue = '10.00%';
+            this.discount = true;
+        }
         this.timeModel.paymentDetailsForm.totalHour = data.totalHour;
 
         if(data.storageDate != null){
@@ -903,9 +884,12 @@ getDistance(){
         
         this.timeModel.paymentDetailsForm.status = data.status;
 
+        this.timeModel.paymentDetailsForm.movers = data.movers;
 
         this.orderForSent = data;
-
+        this.paymentPrice.totalHourPrice = data.totalPrice;
+        (<Control>this.orderForm.controls['forsalesComment']).updateValue(data.forsalesComment);
+        (<Control>this.orderForm.controls['forManagerComment']).updateValue(data.forManagerComment);
         /*this.orderForm = this._fb.group({
 
 
@@ -973,13 +957,17 @@ getDistance(){
 
     };
 
+    private id: number;
+    
   ngOnInit() {
+      
           if(this.userService.user.position!=4){
               if(this.userService.user.position == 0){
                   this.sub = this.route.params.subscribe(params =>{
                       let id = +params['id'];
                       if(id==NaN) console.log('ID IS NAN!!!');
                       console.log("id="+id)
+                      this.id = id;
                       this._orderService.getOrder(id).subscribe((data)=>{
                           console.log(data);
                           this.getOrderData(data);
@@ -1104,37 +1092,38 @@ getDistance(){
   }
 
   private initSizeOfMoves() {
-    this.sizeOfMove = [{
-      type: SizeOfMoveType.COMMERCIAL,
-      name: 'Commercial'
-    },
+    this.sizeOfMove = [
+        {
+            type: SizeOfMoveType.STUDIO,
+            name: 'Studio'
+        },
+        {
+            type: SizeOfMoveType.ONE_BEDROOM_SMALL,
+            name: '1 bedroom(Small)'
+        },
+        {
+            type: SizeOfMoveType.ONE_BEDROOM_LARGE,
+            name: '1 bedroom(large)'
+        },
+        {
+            type: SizeOfMoveType.TWO_BEDROOM,
+            name: '2 bedroom'
+        },
+        {
+            type: SizeOfMoveType.THREE_BADROOM,
+            name: '3 bedroom'
+        },
+        {
+            type: SizeOfMoveType.COMMERCIAL,
+            name: 'Commercial'
+        },
+        {
+            type: SizeOfMoveType.FOUR_PLUS_BEDROOM,
+            name: '4+ bedroom'
+        },
       {
         type: SizeOfMoveType.FEW_ITEMS,
         name: 'Few items'
-      },
-      {
-        type: SizeOfMoveType.FOUR_PLUS_BEDROOM,
-        name: '4+ bedroom'
-      },
-      {
-        type: SizeOfMoveType.ONE_BEDROOM_LARGE,
-        name: '1 bedroom(large)'
-      },
-      {
-        type: SizeOfMoveType.ONE_BEDROOM_SMALL,
-        name: '1 bedroom(Small)'
-      },
-      {
-        type: SizeOfMoveType.STUDIO,
-        name: 'Studio'
-      },
-      {
-        type: SizeOfMoveType.THREE_BADROOM,
-        name: '3 bedroom'
-      },
-      {
-        type: SizeOfMoveType.TWO_BEDROOM,
-        name: '2 bedroom'
       },
     ]
   }
@@ -1384,10 +1373,14 @@ getDistance(){
             console.log(JSON.stringify(object));
 
             let urlAdd: string = 'emailPrice';
-            this._orderService.sentMessage(urlAdd,JSON.stringify(object)).subscribe(
+            /*this._orderService.sentMessage(urlAdd,JSON.stringify(object)).subscribe(
                 data=>{ console.log('Message sent!');},
                 error=> console.log('Error in sending prices message')
-            );   
+            );
+            */
+
+
+            
         }else {
             this.createOrderFormEntity();
             this.createPaymentDetailsFormEntity();
@@ -1415,7 +1408,6 @@ getDistance(){
                 this.orderForSent.estimateDate  = this.timeModel.orderForm.estimateDate ;
                 this.orderForSent.estimateDateTime  = this.timeModel.orderForm.estimateDateTime ;
             }
-            */
 
             let distance = null;
 
@@ -1429,7 +1421,7 @@ getDistance(){
                 this.orderForSent.ddt = +distance;
             }else this.orderForSent.ddt = null;
             this.orderForSent.distance = distance;
-/*
+
             this.orderForSent.tariff = this.timeModel.orderForm.tariff;
             this.orderForSent.paymentMethod = this.timeModel.paymentDetailsForm.paymentMethod;
             this.orderForSent.truck = this.timeModel.paymentDetailsForm.truck;
@@ -1444,15 +1436,94 @@ getDistance(){
             */
             console.log(this.timeModel);
 
+            this.timeModel.orderForm.id =  this.id;
             let urldAdd: string = 'emailOrder';
             let data = JSON.stringify( this.timeModel );
+            console.log("ID: "+this.id);
+            console.log(this.timeModel);
+
             this._orderService.sentMessage(urldAdd,data).subscribe(
                 data=>{ console.log('Message sent!');},
                 error=> console.log('Error in sending order message')
             );
 
 
+
         }
+    };
+    private selectCompanyChange(item:any):void{
+        console.log("Company selected: "+item.name);
+        this.selectedCompany = item;
+        this.timeModel.orderForm.company = item.name;
+        this.changeMoverPrice();//меняет цены в зависиости от выбраной компании
+    };
+
+    private selectMoversChange(item:any):void{
+        console.log('Movers:' + item.name);
+        this.timeModel.paymentDetailsForm.movers = item.name;
+        this.moverType = item.type;
+        this.changeMoverPrice();
+    }
+    
+    private selectTariffChange(item:any):void{
+        //console.log('Selected tariff: ' + item.name);
+        this.timeModel.orderForm.tariff = item.name;
+    }
+
+    private selectPaymentMethodChange(item: any):void{
+        console.log('PaymentMethod:' + item.name)
+        this.timeModel.paymentDetailsForm.paymentMethod = item.name;
+    }
+    
+    private selectShrinkChange(item:any) {//shrink - Пленка
+        console.log('SelectShrink:' + item.name);
+        this.timeModel.paymentDetailsForm.shrink = item.name;
+    }
+
+    private selectSizeOfStorageUnitChange(item:any):void{
+        console.log('SizeOfStorageUnit:' + item.name);
+        this.timeModel.paymentDetailsForm.storageSize = item.name;
+    }
+
+    private selectRatePerHourChange(item:RatePerHours) {
+        console.log('RatePerHour:' + item.name);
+        this.timeModel.paymentDetailsForm.rateType = item.name;
+    }
+
+    private selectTapeChange(item:any){
+        console.log('SelectTape:' + item.name);
+        this.timeModel.paymentDetailsForm.tape = item.name;
+    }
+
+    private selectStatusChange(item:Status) {
+        if (item.type === StatusType.COMPLETED) {
+            console.log('status Completed selected');
+        }
+        console.log('Status:' + item.type + ', name:' + item.name);
+        this.timeModel.paymentDetailsForm.status = item.name;
+    }
+
+
+    public address : Object;
+    getAddress(place:Object) {
+       // this.address = place['formatted_address'];
+        this.address = place['name'];
+        var location = place['geometry']['location'];
+        var lat =  location.lat();
+        var lng = location.lng();
+        console.log("Address Object", place);
+        var str = '';
+        str = place['adr_address'];
+        let index = str.indexOf("postal-code");
+        console.log(str.slice(index+13, index+18));
+    }
+
+    private totalHourPriceChange(newValue: any){
+        console.log("new Value: "+ newValue);
+    }
+
+    private changePackingMaterialPrice(){
+        this.changeTotalPrice();
     };
 }
 

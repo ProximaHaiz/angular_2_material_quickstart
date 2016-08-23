@@ -21,10 +21,12 @@ export class EventService extends AbstractService {
     super()
   }
 
-  getEvents() {
+  getEvents(customerId:number) {
     const eventsUrl = API_URL + 'events';
     // console.log('User send conf-pass:'+ user.reset_password);
-    return this._http.get(eventsUrl)
+    let params = new URLSearchParams();
+    params.set('customerId', customerId.toString());
+    return this._http.get(eventsUrl,{search: params})
       .map(res =>res.json())
       .catch(this._handleError)
   }
@@ -36,13 +38,15 @@ export class EventService extends AbstractService {
       .map(res =>res.json())
       .catch(this._handleError)
   }
-    getEventsByOrderStatus(orderStatus:OrderStatusString) {
+    getEventsByOrderStatus(orderStatus:OrderStatusString, customerId:number) {
       console.log('OrderStatus on Service:'+JSON.stringify(orderStatus));
       let params = new URLSearchParams();
       params.set('booked',orderStatus.booked);
       params.set('completed',orderStatus.completed);
       params.set('inProgress',orderStatus.inProgress);
       params.set('sold',orderStatus.sold);
+      params.set('lost', orderStatus.lost);
+      params.set('customerId', customerId.toString());
     const eventsUrl = API_URL + 'events';
     // console.log('User send conf-pass:'+ user.reset_password);
    return this._http.get(API_URL+'eventss',{search: params})

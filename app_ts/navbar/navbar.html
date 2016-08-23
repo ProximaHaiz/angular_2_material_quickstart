@@ -2,6 +2,7 @@
      <div style="position: absolute;width: 72px;height: 64px;margin-left: -1%;">
          <img src="logo.png" style="width: 100%;">
      </div>
+     <span *ngIf="userService.user.isLoggin" style="position: absolute;margin-left: 10%;color: white;">User id: {{userService.user.customerId}}</span>
     <div class="container ">
 
         <div class="navbar-header col-sm-3">
@@ -32,7 +33,7 @@
                         <li *ngIf="!userService.user.isLoggin"><a [routerLink]="['/register']" > <span class="glyphicon glyphicon-user"></span>Sign up</a></li>
                         <li *ngIf="!userService.user.isLoggin"><a [routerLink]="['/login']" ><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
                         <li *ngIf="userService.user.isLoggin"><a [routerLink]="['/content/schedule']" ><span class="glyphicon glyphicon-log-in"></span> Schedule</a></li>
-                        <li *ngIf="userService.user.isLoggin"><a (click)="logout()"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+                        <li *ngIf="userService.user.isLoggin"><a (click)="logout()" style="cursor:pointer;"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
                     </ul>
                 </div>
 

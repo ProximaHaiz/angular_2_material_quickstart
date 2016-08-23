@@ -3,6 +3,12 @@
     <div class="row placeholders">
     </div>
     <!-- CLIENT INFO-->
+
+    <div *ngIf="userService.user.position == 0" class="panel panel-default" style="width: 10%;">
+      <div class="panel-body">
+        <span>Your id: {{userService.user.customerId}}</span>
+      </div>
+    </div>
     <div class="row">
       <h2 class="col-md-2" style="margin-left: 14%;">
         Client Info
@@ -19,16 +25,17 @@
         <div class="col-xs-6 col-md-3">
 
           <div class="input-group ">
-            <span class="input-group-addon label_40" id="basic-addon1232153">
+            <span class="input-group-addon label_40">
               <span class="glyphicon glyphicon-home"></span> Company
             </span>
             <div class="dropdown" style="">
               <select class="form-control"
                       style="font-weight: 600;"
+                      #selectCompany
                       [(ngModel)]="timeModel.orderForm.company"
-                      [ngModelOptions]="{standalone: true}">
-                <option *ngFor="let item of companies"
-                        (click)="selectCompany(item)">
+                      [ngModelOptions]="{standalone: true}"
+                      (change)="selectCompanyChange(companies[selectCompany.selectedIndex])">
+                <option *ngFor="let item of companies">
                   {{item.name}}
                 </option>
               </select>
@@ -95,8 +102,12 @@
           <div class="input-group col-md-10">
             <span class="input-group-addon" id="basic-addon17"><span class="glyphicon glyphicon-fullscreen"></span> Size of move</span>
             <div class="dropdown" style="width: 90%;">
-              <select id="packingMaterials" class="form-control" style="font-weight: 600;" [(ngModel)]="timeModel.orderForm.sizeOfMove" [ngModelOptions]="{standalone: true}">
-                <option *ngFor="let item of sizeOfMove" (click)="selectSizeOfMoves(item)">
+              <select  class="form-control"
+                       #selectSizeOfMove
+                       style="font-weight: 600;"
+                       [(ngModel)]="timeModel.orderForm.sizeOfMove"
+                       [ngModelOptions]="{standalone: true}" (change)="selectSizeOfMoves(sizeOfMove[selectSizeOfMove.selectedIndex])">
+                <option *ngFor="let item of sizeOfMove">
                   {{item.name}}
                 </option>
               </select>
@@ -114,6 +125,7 @@
                          class="w_90"
                          formControlName="address"
                          placeholder="Address from"
+                         (setAddress) = "getAddress($event)" googleplace
                          pInputText/>
                                <span class="glyphicon glyphicon-remove pull-right" style="cursor:pointer"
                                      *ngIf="orderForm.controls.loadingAddress.controls.length > 1"
@@ -140,6 +152,7 @@
                          class="w_90"
                          formControlName="address"
                          placeholder="Address to"
+                         (setAddress) = "getAddress($event)" googleplace
                          pInputText
                   />
                                              <span class="glyphicon glyphicon-remove pull-right" style="cursor:pointer"
@@ -337,8 +350,12 @@
         <div class="input-group">
           <span class="input-group-addon"><span class="glyphicon glyphicon-shopping-cart"></span> Tariff</span>
           <div class="dropdown" style="width: 74%;">
-            <select class="form-control boldC" [(ngModel)]="timeModel.paymentDetailsForm.tariff" [ngModelOptions]="{standalone: true}">
-              <option *ngFor="let item of tariffs" (click)="selectTariff(item)">
+            <select class="form-control boldC"
+                    #selectTariff
+                    [(ngModel)]="timeModel.paymentDetailsForm.tariff"
+                    [ngModelOptions]="{standalone: true}"
+                    (change)="selectTariffChange(tariffs[selectTariff.selectedIndex])">
+              <option *ngFor="let item of tariffs">
                 {{item.name}}
               </option>
             </select>
@@ -353,8 +370,12 @@
         <div class="input-group" style="padding-left: 21.5%;z-index: 1000;">
           <span class="input-group-addon"><span class="glyphicon glyphicon-credit-card"></span> Payment method</span>
           <div class="dropdown" style="width: 60%;">
-            <select class="form-control boldC"  [(ngModel)]="timeModel.paymentDetailsForm.paymentMethod" [ngModelOptions]="{standalone: true}">
-              <option *ngFor="let item of paymentMethods" (click)="selectPaymentMethod(item)" >
+            <select class="form-control boldC"
+                    #selectPaymentMethod
+                    [(ngModel)]="timeModel.paymentDetailsForm.paymentMethod"
+                    [ngModelOptions]="{standalone: true}"
+                    (change)="selectPaymentMethodChange(paymentMethods[selectPaymentMethod.selectedIndex])">
+              <option *ngFor="let item of paymentMethods">
                 {{item.name}}
               </option>
             </select>
@@ -370,8 +391,11 @@
         <div class="input-group m_4">
           <span class="input-group-addon"><span class="glyphicon glyphicon-shopping-cart"></span> Trucks</span>
           <div class="dropdown">
-            <select class="form-control boldC p_25" [(ngModel)]="timeModel.paymentDetailsForm.truck" [ngModelOptions]="{standalone: true}">
-              <option *ngFor="let item of trucks" (click)="selectTruck(item)">
+            <select class="form-control boldC p_25"
+                    #selectTrucks
+                    [(ngModel)]="timeModel.paymentDetailsForm.truck"
+                    [ngModelOptions]="{standalone: true}" (change)="selectTruck(trucks[selectTrucks.selectedIndex])">
+              <option *ngFor="let item of trucks">
                 {{item.name}}
               </option>
             </select>
@@ -388,8 +412,10 @@
         <div class="input-group m_4 w_158">
           <span class="input-group-addon" id="basic-addon1593293"><span class="glyphicon glyphicon-compressed"></span> Packing materials</span>
           <div class="dropdown">
-            <select id="packingMaterials" class="form-control boldC p_25">
-              <option *ngFor="let item of packageMaterials" (click)="selectPackingMaterials(item)">
+            <select  class="form-control boldC p_25"
+                     #selectPackingMaterial
+                     (change)="selectPackingMaterials(packageMaterials[selectPackingMaterial.selectedIndex])">
+              <option *ngFor="let item of packageMaterials">
                 {{item.name}}
               </option>
             </select>
@@ -399,8 +425,12 @@
         <div class="input-group m_4 w_158">
           <span class="input-group-addon"><span class="glyphicon glyphicon-resize-small"></span> Shrink</span>
           <div class="dropdown" style="width: 41%;">
-            <select id="packingMaterials" class="form-control boldC p_25" [(ngModel)]="timeModel.paymentDetailsForm.shrink" [ngModelOptions]="{standalone: true}">
-              <option *ngFor="let item of shrinks" (click)="selectShrink(item)">
+            <select  class="form-control boldC p_25"
+                     #selectShrink
+                     (change)="selectShrinkChange(shrinks[selectShrink.selectedIndex])"
+                     [(ngModel)]="timeModel.paymentDetailsForm.shrink"
+                     [ngModelOptions]="{standalone: true}">
+              <option *ngFor="let item of shrinks">
                 {{item.name}}
               </option>
             </select>
@@ -411,8 +441,12 @@
         <div class="input-group m_4 w_158">
           <span class="input-group-addon" style="width: 32%;"><span class="glyphicon glyphicon-tag"></span> Tape</span>
           <div class="dropdown" style="width: 41%;">
-            <select id="packingMaterials" class="form-control boldC p_25" [(ngModel)]="timeModel.paymentDetailsForm.tape" [ngModelOptions]="{standalone: true}">
-              <option *ngFor="let item of tapes" (click)="selectTape(item)">
+            <select class="form-control boldC p_25"
+                    #selectTape
+                    [(ngModel)]="timeModel.paymentDetailsForm.tape"
+                    [ngModelOptions]="{standalone: true}"
+                    (change)="selectTapeChange(tapes[selectTape.selectedIndex])">
+              <option *ngFor="let item of tapes">
                 {{item.name}}
               </option>
             </select>
@@ -438,7 +472,8 @@
           <input style="width: 45%;"
                  type="text"
                  class="form-control boldC"
-                 [(ngModel)]="timeModel.paymentDetailsForm.ddt" [ngModelOptions]="{standalone: true}"
+                 [(ngModel)]="timeModel.orderForm.distance"
+                 [ngModelOptions]="{standalone: true}"
                  placeholder="Miles"
           />
         </div>
@@ -468,9 +503,9 @@
           <span class="input-group-addon">
              <input type="checkbox"
                     style="width: 20px;height: 20px;;"
-                    name="vehicle"
-                    [value]="discountValue"
-                    value="Bike" (change)="toggleDiscount()"/>
+                    [ngModel]="discount"
+                    [ngModelOptions]="{standalone: true}"
+                    (change)="toggleDiscount()"/>
           </span>
 
         </div>
@@ -478,8 +513,13 @@
         <div class="input-group m_4" style="width: 160%;">
           <span class="input-group-addon"><span class="glyphicon glyphicon-folder-close"></span> Total hours</span>
           <div class="dropdown" style="width: 70%;">
-            <select id="packingMaterials" class="form-control boldC" style="padding-left: 25%;" [(ngModel)]="timeModel.paymentDetailsForm.totalHour" [ngModelOptions]="{standalone: true}">
-              <option *ngFor="let item of totalHours" (click)="selectTotalForFirst(item)">
+            <select class="form-control boldC"
+                    #selectTotalHours
+                    style="padding-left: 25%;"
+                    [(ngModel)]="timeModel.paymentDetailsForm.totalHour"
+                    [ngModelOptions]="{standalone: true}"
+                    (change)="selectTotalForFirst(totalHours[selectTotalHours.selectedIndex])">
+              <option *ngFor="let item of totalHours">
                 {{item.name}}
               </option>
             </select>
@@ -493,8 +533,12 @@
         <div class="input-group m_4">
           <span class="input-group-addon" id="basic-addon15994223"><span class="glyphicon glyphicon-user"></span> Movers</span>
           <div class="dropdown">
-            <select class="form-control">
-              <option *ngFor="let item of movers" (click)="selectMover(item)">
+            <select class="form-control"
+                    #selectMovers
+                    [(ngModel)]="timeModel.paymentDetailsForm.movers"
+                    [ngModelOptions]="{standalone: true}"
+                    (change)="selectMoversChange(movers[selectMovers.selectedIndex])">
+              <option *ngFor="let item of movers">
                 {{item.name}}
               </option>
             </select>
@@ -506,8 +550,10 @@
         <div class="input-group" >
           <span class="input-group-addon"><span class="glyphicon glyphicon-dashboard"></span> Rate per hour</span>
           <div class="dropdown" style="width: 64%;">
-            <select class="form-control boldC">
-              <option *ngFor="let item of ratePerHour" (click)="selectRateperhour(item)">
+            <select class="form-control boldC"
+                    #selectRatePerHour
+                    (change)="selectRatePerHourChange(ratePerHour[selectRatePerHour.selectedIndex])">
+              <option *ngFor="let item of ratePerHour">
                 {{item.name}}
               </option>
             </select>
@@ -528,8 +574,11 @@
         <div class="input-group" style="margin-top: 71%;margin-left: -16%;">
           <span class="input-group-addon">Size of storage unit</span>
           <div class="dropdown">
-            <select id="packingMaterials" class="form-control boldC" style="width: 40%;padding-left: 10px;margin-right: 4%;">
-              <option *ngFor="let item of storageSizes" (click)="selectSizeOfStorageUnit(item)">
+            <select  class="form-control boldC"
+                     #selectSizeOfStorageUnit
+                     (change)="selectSizeOfStorageUnitChange(storageSizes[selectSizeOfStorageUnit.selectedIndex])"
+                     style="width: 40%;padding-left: 10px;margin-right: 4%;">
+              <option *ngFor="let item of storageSizes">
                 {{item.name}}
               </option>
             </select>
@@ -571,19 +620,24 @@
                class="form-control right-input"
                style="margin-top: 4.5%;"
                placeholder="0.00"
+               formControlName="packingMaterialPrice"
+               (change)="changeTotalPrice()"
                pInputText
         />
 
         <input type="text"
                id="shrinkSum"
                class="form-control right-input"
+               formControlName="shrinkSum"
+               (change)="changeTotalPrice()"
                placeholder="0.00"
                pInputText
         />
         <input type="text"
                class="form-control right-input"
                placeholder="0.00"
-               aria-describedby="basic-addon1"
+               formControlName="tapeSum"
+               (change)="changeTotalPrice()"
                style="margin-top: 4%;"
                pInputText
         />
@@ -598,12 +652,15 @@
         <input type="text"
                class="form-control right-input"
                placeholder="0.00"
+               [value]="timeModel.paymentDetailsForm.ddtPrice|currency:'USD':true:'1.2-2' "
                pInputText
         />
 
         <input type="text"
                class="form-control right-input"
                placeholder="0.00"
+               formControlName="storagePrice"
+               (change)="changeTotalPrice()"
                style="margin-top: 5%;"
                pInputText
         />
@@ -619,6 +676,8 @@
                class="form-control right-input"
                style="margin-top:4%;"
                [value]="paymentPrice.totalHourPrice|currency:'USD':true:'1.2-2'"
+               #totalHourPrice
+               (input)="totalHourPriceChange(totalHourPrice.value)"
                placeholder="0.00"
                pInputText
         />
@@ -670,8 +729,11 @@
       <div class="input-group ">
         <span class="input-group-addon"><span class="glyphicon glyphicon-tasks"></span> Status(color of order)</span>
         <div class="dropdown ">
-          <select id="packingMaterials" class="form-control boldC p_25" [(ngModel)]="timeModel.paymentDetailsForm.status" [ngModelOptions]="{standalone: true}">
-            <option *ngFor="let item of status" (click)="selectStatus(item)">
+          <select  class="form-control boldC p_25"
+                   #selectStatus
+                   [(ngModel)]="timeModel.paymentDetailsForm.status"
+                   [ngModelOptions]="{standalone: true}" (change)="selectStatusChange(status[selectStatus.selectedIndex])">
+            <option *ngFor="let item of status">
               {{item.name}}
             </option>
           </select>

@@ -31,7 +31,7 @@
                             <span class="glyphicon glyphicon-search bv ade"></span>
                         </a>
                     </li>
-                      <li>
+                      <li *ngIf="!userService.user.position == 0 && !userService.user.position==1">
                         <a   [routerLink]="['/content/order']" title="OrderPage" data-toggle="tooltip">
                             <span class="glyphicon glyphicon-usd"></span>
                         </a>

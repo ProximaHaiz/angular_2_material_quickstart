@@ -73,12 +73,14 @@ export class EMailComponent {
       new EMail('#10012', 'Mike', 'Delay', 'mdaleyco@gmail.com', 'Quote Form Submitted on RoyalMovingCo.com', '2016-03-19')
     ];
 
-    /*this.emailReviever.getEMails().subscribe(
-      data => { this.emails = data},
+    this.emailReviever.getEMails().subscribe(
+      data => { 
+        console.log(data);
+      },
       err => console.error(err),
       () => console.log('done')
     );
-    */
+    
   }
 
 

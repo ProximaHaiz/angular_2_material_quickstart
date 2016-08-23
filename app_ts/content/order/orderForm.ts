@@ -33,4 +33,5 @@ export class OrderForm{
     // unLoadingAddress:string;
     tariff:string;
     followUpDate: string;
+    id: number;
 }

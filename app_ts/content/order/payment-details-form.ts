@@ -33,4 +33,7 @@ export class PaymentDetailsForm{
     ratePerHour:number;
     totalPrice:number;
     totalHour:number;
+
+    ddtPrice: number;
+    packingMaterialPrice: number
 }

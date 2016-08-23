@@ -15,6 +15,7 @@ import { OrderService } from '../../service/order.service';
 import {EventService} from "../../service/calendar.service";
 import {OrderStatusString} from "../../schedule/utils/order-status-string";
 import {OrderCountStatus} from "../order/interfaces/order-count-status";
+import {UserServiceComponent} from "../../service/user.service";
 
 
 
@@ -42,7 +43,8 @@ export class DashboardComponent  implements OnInit{
     private LOST:string= 'Lost';
 
 //booked - забронировано
-    constructor(private _eventService:EventService) {
+    constructor(private _eventService:EventService,
+        public userService: UserServiceComponent) {
         this.initOrderByStatusString();
 
         this.orderCountStatus = new OrderCountStatus();
@@ -50,10 +52,11 @@ export class DashboardComponent  implements OnInit{
         this.orderStatusString.booked = this.BOOKED;
         this.orderStatusString.inProgress = this.IN_PROGRESS;
         this.orderStatusString.sold = this.SOLD;
-      //  this.orderStatusString.lost = this.LOST;
+        // this.orderCountStatus.lost = this.LOST;
+       this.orderStatusString.lost = this.LOST;
 
-
-        this._eventService.getEventsByOrderStatus(this.orderStatusString)
+       console.log(JSON.stringify(this.orderStatusString))
+        this._eventService.getEventsByOrderStatus(this.orderStatusString,this.userService.user.customerId)
             .subscribe(
                 events=>{
                     this.orderCountStatus = events.countByStatus; // get number of orders by orderStatus
@@ -77,9 +80,7 @@ export class DashboardComponent  implements OnInit{
                 {
                     data: [
                         this.orderCountStatus.completed,
-                        // 2,
                         this.orderCountStatus.lost,
-                        // 3,
                         this.orderCountStatus.inProgress,
                         this.orderCountStatus.booked,
                         this.orderCountStatus.sold

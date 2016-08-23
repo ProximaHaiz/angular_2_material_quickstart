@@ -89,6 +89,10 @@ export class ScheduleDemo implements OnInit {
         case this.SOLD:
         this.orderStatusString.sold = element;
         break;
+
+          case this.LOST:
+              this.orderStatusString.lost = element;
+              break;
       }
       console.log('item:'+JSON.stringify(this.orderStatusString));
     });
@@ -99,7 +103,7 @@ export class ScheduleDemo implements OnInit {
   }
 
     getEventsByOrderStatus() {
-    this._eventService.getEventsByOrderStatus(this.orderStatusString)
+    this._eventService.getEventsByOrderStatus(this.orderStatusString, this.userService.user.customerId)
       .subscribe(
         events=>{
            this.currentDate = events.currentDate;
@@ -114,7 +118,7 @@ export class ScheduleDemo implements OnInit {
 
 
   getEvents() {
-    this._eventService.getEvents()
+    this._eventService.getEvents(this.userService.user.customerId)
       .subscribe(
         events=>{
         //    this.currentDate = events.currentDate;
@@ -163,6 +167,7 @@ private initOrderByStatusString(){
     this.initOrderByStatusString();
     // this.getCurrentDate();
     this.getEvents();
+    // this.getEventsByOrderStatus();
     this.header = {
       left: 'prev,next today',
       center: 'title',
@@ -207,12 +212,10 @@ private initOrderByStatusString(){
        this._router.navigate( ['/content/order', e.calEvent.orderId] );
      }
      else if(this.userService.user.position == 3){
-         this._router.navigate(['/content/counterManager',e.calEvent.orderId ]);
+         this._router.navigate(['/content/counterManage', ]);
      }
-     else {
-       console.log('conterManagerNavigate, id:'+e.calEvent.orderId)
-       this._router.navigate(['/content/manager', e.calEvent.orderId]);
-     }
+     else this._router.navigate(['/content/manager', e.calEvent.orderId]);
+
   }
 
   saveEvent() {
