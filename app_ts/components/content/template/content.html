@@ -1,0 +1,17 @@
+<div class="row">
+    <div class="col s12">
+        <ul class="tabs">
+            <li class="tab col s3"><a [routerLink]="['/content/home']">Home2</a></li>
+            <li class="tab col s3"><a class="active" [routerLink]="['/content/about']">About the programm</a></li>
+            <li class="tab col s3"><a [routerLink]="['/content/partners']">Program parthners</a></li>
+            <li class="tab col s3"><a [routerLink]="['/content/offers']">Special offers</a></li>
+            <li class="tab col s3"><a [routerLink]="['/login']">Personal account</a></li>
+        </ul>
+    </div>
+</div>
+
+<div class="row" style="padding:0px; margin:0px;">
+    <div class="col s12" style="padding:0px;">
+        <router-outlet></router-outlet>
+    </div>
+</div>

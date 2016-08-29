@@ -1,0 +1,185 @@
+
+<div id="loginForm" class="row" style="visibility:hidden;">
+<div class=" col 20 s10 offset-s1">
+
+
+<div class="row" style="margin-top:15%;">
+    <div class="col s6 row z-depth-4 offset-s3">
+    <div class="col s3">
+          <img src="src/images/Logo-icon.png" style="width:150px; heigth:150px;padding:15px;">
+    </div>
+
+    <form>
+    <div class="col s9">
+        <div class="input-field col s12">
+          <i class="material-icons prefix">account_circle</i>
+          <input id="icon_prefix" type="text" class="validate">
+          <label for="icon_prefix">First Name</label>
+        </div>
+        <div class="input-field col s12">
+          <i class="material-icons prefix">phone</i>
+          <input id="icon_telephone" type="tel" class="validate">
+          <label for="icon_telephone">Telephone</label>
+        </div>
+    </div>
+
+    <div class="col s12" style="margin-bottom: 20px;">
+          <button class="btn waves-effect waves-light col s5 " type="button" name="action">Registrate
+              <i class="material-icons right">input</i>
+        </button>
+
+        <button class="btn waves-effect waves-light col s5 offset-s2" type="submit" name="action">Submit
+              <i class="material-icons right">send</i>
+        </button>
+    </div>
+
+    <!--<div class="col s12" >
+        <div class="col s6 offset-s3" style="aligin:center;">
+          <div class="text-center">
+            <a href="http://facebook.com"
+                class="brand-logo" style="width:40px; heigth:40px;padding:5px">
+                <img 
+                src="http://www.freeiconspng.com/uploads/fb-icon-11.png" 
+                style="width:40px; heigth:40px;padding:5px;">
+             </a>
+
+                <a href="http://vk.com"
+                   lass="brand-logo" style="width:40px; heigth:40px;padding:5px">
+              <img src="http://shatova-wordpress.tw1.ru/wp-content/uploads/2014/02/af3104_fd129d2163d743bb98ab26731a0beda8.png" 
+                 style="width:40px; heigth:40px;padding:5px;">
+             </a>
+
+                <a href="http://shatova-wordpress.tw1.ru/wp-content/uploads/2014/02/af3104_fd129d2163d743bb98ab26731a0beda8.png"
+                   class="brand-logo" 
+                   style="width:40px; heigth:40px;padding:5px">
+                        <img src="https://cdn0.iconfinder.com/data/icons/yooicons_set01_socialbookmarks/512/social_linkedin_button_blue.png" 
+                             style="width:40px; heigth:40px;padding:5px;">
+               </a>
+           
+
+        </div>
+    </div>
+    </div>-->
+
+    </form>
+</div>
+
+
+ 
+            
+
+
+<!--<input type="date" 
+       class="datepicker"
+       [(ngModel)]="date"
+       #valDate   
+       (change)="change(valDate .value)"   
+>
+
+       <h2>{{date}}</h2>
+
+       <h2>valDate:{{valDate.value}}</h2>
+
+
+<input type="text" (input)="inputChange()">
+  <div class="input-field col s6">
+    <select>
+      <option value="" disabled selected>Choose your option</option>
+      <option value="1">Option 1</option>
+      <option value="2">Option 2</option>
+      <option value="3">Option 3</option>
+    </select>
+    <label>Materialize Select</label>
+  </div>
+
+  <div class="input-field col s6">
+    <select multiple>
+      <option value="" disabled selected>Choose your option</option>
+      <option value="1">Option 1</option>
+      <option value="2">Option 2</option>
+      <option value="3">Option 3</option>
+    </select>
+    <label>Materialize Multiple Select</label>
+  </div>
+
+  <div class="input-field col s12">
+    <select multiple>
+      <optgroup label="team 1">
+        <option value="1">Option 1</option>
+        <option value="2">Option 2</option>
+      </optgroup>
+      <optgroup label="team 2">
+        <option value="3">Option 3</option>
+        <option value="4">Option 4</option>
+      </optgroup>
+    </select>
+    <label>Optgroups</label>
+  </div>
+
+  <div class="input-field col s12 m6">
+    <select class="icons">
+      <option value="" disabled selected>Choose your option</option>
+      <option value="" data-icon="https://pp.vk.me/c626124/v626124947/289e1/2_y5kkHqJec.jpg" class="circle">example 1</option>
+      <option value="" data-icon="https://pp.vk.me/c626124/v626124947/289e1/2_y5kkHqJec.jpg" class="circle">example 2</option>
+      <option value="" data-icon="https://pp.vk.me/c626124/v626124947/289e1/2_y5kkHqJec.jpg" class="circle">example 1</option>
+    </select>
+    <label>Images in select</label>
+  </div>
+
+
+  <div class="progress">
+      <div class="indeterminate"></div>
+  </div>
+
+
+  <label>Browser Select</label>
+  <select class="browser-default">
+    <option value="" disabled selected>Choose your option</option>
+    <option value="1">Option 1</option>
+    <option value="2">Option 2</option>
+    <option value="3">Option 3</option>
+  </select>
+
+  <div class="preloader-wrapper big active">
+    <div class="spinner-layer spinner-blue-only">
+      <div class="circle-clipper left">
+        <div class="circle"></div>
+      </div><div class="gap-patch">
+        <div class="circle"></div>
+      </div><div class="circle-clipper right">
+        <div class="circle"></div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+
+
+
+  <ul id="slide-out" class="side-nav">
+    <li><div class="userView">
+      <img class="background" src="images/office.jpg">
+      <a href="#!user"><img class="circle" src="images/yuna.jpg"></a>
+      <a href="#!name"><span class="white-text name">John Doe</span></a>
+      <a href="#!email"><span class="white-text email">jdandturk@gmail.com</span></a>
+    </div></li>
+    <li><a href="#!"><i class="material-icons">cloud</i>First Link With Icon</a></li>
+    <li><a href="#!">Second Link</a></li>
+    <li><div class="divider"></div></li>
+    <li><a class="subheader">Subheader</a></li>
+    <li><a class="waves-effect" href="#!">Third Link With Waves</a></li>
+  </ul>
+  <a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons">menu</i></a>
+        -->
+
+
+
+
+  </div>
+  </div>
+
+  
+

@@ -3,6 +3,21 @@ body,li,h1,h2,h3,h4,h5,h6,a,p{
     font-family: 'Oswald', sans-serif;
 }
 
+.row-without-margin{
+    margin:0px;
+}
+
+.row-without-padding{
+      padding: 0px;
+}
+
+
+
+
+
+
+
+
 .header{
     margin-top: 60px;
     height: auto;
